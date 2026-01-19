@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e94560;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+            text-align: center;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #e94560;
+        }
+
+        .puzzle-area {
+            background: #1a1a2e;
+            border: 1px solid #00fff5;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .puzzle-text {
+            color: #ffffff;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+
+        .hint {
+            color: #00fff5;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .input-area {
+            margin-top: 30px;
+        }
+
+        .input-area label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .url-display {
+            background: #0a0a15;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #888;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .url-display .editable {
+            color: #00fff5;
+            border-bottom: 2px dashed #00fff5;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 12px;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            border: 2px solid #00fff5;
+            border-radius: 5px;
+            color: #00fff5;
+            text-align: center;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
+        }
+
+        .go-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin-top: 15px;
+            background: linear-gradient(45deg, #00fff5, #00b8b8);
+            border: none;
+            border-radius: 5px;
+            color: #1a1a2e;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .go-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 245, 0.6);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .back-link:hover {
+            color: #e94560;
+        }
+
+        /* Hidden comment hint - players need to view source to find this! */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="level-badge">LEVEL 1</span>
+        <h1>🔍 The Hidden Message</h1>
+        
+        <div class="puzzle-area">
+            <p class="puzzle-text">
+                Every webpage has secrets hidden beneath the surface.<br><br>
+                What you see is not always everything there is.<br><br>
+                To find the answer, you must look at what the <strong>browser doesn't show</strong>.
+            </p>
+            <p class="hint">
+                💡 Hint: Developers often leave notes in their code...
+            </p>
+        </div>
+
+        <div class="input-area">
+            <label>Enter the answer to proceed:</label>
+            <div class="url-display">
+                https://puzzle.otischan.dev/2<span class="editable">?????</span>.html
+            </div>
+            <input type="text" id="answer" placeholder="your answer" autocomplete="off">
+            <br>
+            <button class="go-btn" onclick="checkAnswer()">Go →</button>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to Instructions</a>
+    </div>
+
+    <!-- 
+    ████████████████████████████████████████████████
+    █                                              █
+    █   🎉 Congratulations! You found it!          █
+    █                                              █
+    █   The answer is: source                      █
+    █                                              █
+    █   Next page: 2source.html                    █
+    █                                              █
+    ████████████████████████████████████████████████
+    -->
+
+    <script>
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value.toLowerCase().trim();
+            if (answer) {
+                window.location.href = '2' + answer + '.html';
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    </script>
+</body>
+</html>

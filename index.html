@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e94560;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #e94560;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00fff5;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: #00fff5;
+            margin: 25px 0 15px 0;
+            border-bottom: 1px solid #00fff5;
+            padding-bottom: 5px;
+        }
+
+        p, li {
+            color: #ffffff;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            margin-left: 25px;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .url-example {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid #00fff5;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .url-example span {
+            color: #00fff5;
+        }
+
+        .start-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            background: linear-gradient(45deg, #e94560, #ff6b6b);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.3em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.6);
+        }
+
+        .warning {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .warning p {
+            color: #ffd700;
+            margin: 0;
+        }
+
+        .tips {
+            background: rgba(0, 255, 245, 0.1);
+            border: 1px solid #00fff5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .tips li {
+            color: #00fff5;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Web Puzzle Challenge</h1>
+        <p class="subtitle">A Classic Internet Riddle Game</p>
+
+        <h2>📖 What is this?</h2>
+        <p>
+            Welcome to the <span class="highlight">Web Puzzle Challenge</span>! 
+            This is a classic internet puzzle game where each page contains hidden clues. 
+            Your mission is to find these clues and figure out the URL of the next page.
+        </p>
+
+        <h2>🎯 How to Play</h2>
+        <p>Each level is a webpage with a puzzle. To advance, you must:</p>
+        <ul>
+            <li>Examine the page carefully for <span class="highlight">hidden clues</span></li>
+            <li>Figure out the <span class="highlight">answer</span> to the puzzle</li>
+            <li>Modify the URL to navigate to the next level</li>
+        </ul>
+
+        <h2>🔗 URL Format</h2>
+        <p>Pages follow this pattern:</p>
+        <div class="url-example">
+            <span>https://puzzle.otischan.dev/</span>1<span class="highlight">answer</span>.html<br>
+            <span>https://puzzle.otischan.dev/</span>2<span class="highlight">answer</span>.html<br>
+            <span>https://puzzle.otischan.dev/</span>3<span class="highlight">answer</span>.html<br>
+            ... and so on
+        </div>
+        <p>
+            The number indicates the level, and <span class="highlight">answer</span> is what you need to discover!
+        </p>
+
+        <div class="tips">
+            <h2 style="margin-top: 0;">💡 Tips for Beginners</h2>
+            <ul>
+                <li>Read everything on the page carefully</li>
+                <li>Check the page source code (Right-click → View Page Source)</li>
+                <li>Look at image filenames and alt text</li>
+                <li>Inspect element properties</li>
+                <li>Think outside the box!</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <p>⚠️ <strong>Note:</strong> Answers are always in <strong>lowercase</strong> unless stated otherwise. No spaces in URLs!</p>
+        </div>
+
+        <a href="1begin.html" class="start-btn">🚀 Start Challenge</a>
+
+        <footer>
+            Good luck, puzzle solver! 🧩
+        </footer>
+    </div>
+</body>
+</html>

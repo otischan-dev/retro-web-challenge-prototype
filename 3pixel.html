@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 2 - Web Puzzle Challenge</title>
+    <title>Level 3 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -30,7 +30,6 @@
             padding: 40px;
             box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
             text-align: center;
-            position: relative;
         }
 
         .level-badge {
@@ -55,7 +54,6 @@
             border-radius: 10px;
             padding: 30px;
             margin: 20px 0;
-            position: relative;
         }
 
         .puzzle-text {
@@ -68,64 +66,6 @@
             color: #00fff5;
             margin-top: 20px;
             font-style: italic;
-        }
-
-        /* SECRET AREA 1: Invisible clickable dot */
-        .secret-dot {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: transparent;
-            border-radius: 50%;
-            cursor: default; /* Don't give it away with pointer cursor */
-            top: 15px;
-            right: 15px;
-            z-index: 100;
-        }
-
-        .secret-dot:hover {
-            /* Subtle hint on hover - barely visible */
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        /* SECRET AREA 2: Hidden in the period of a sentence */
-        .secret-period {
-            cursor: default;
-            position: relative;
-        }
-
-        /* SECRET AREA 3: The emoji itself is clickable */
-        .secret-emoji {
-            cursor: default;
-            user-select: none;
-        }
-
-        /* SECRET AREA 4: Triple-click required area */
-        .triple-click-zone {
-            display: inline;
-        }
-
-        /* Revealed answer styling */
-        .answer-reveal {
-            display: none;
-            background: linear-gradient(45deg, #00ff88, #00cc6a);
-            color: #1a1a2e;
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-            animation: popIn 0.5s ease;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .answer-reveal.show {
-            display: block;
         }
 
         .input-area {
@@ -212,101 +152,75 @@
             display: inline-block;
         }
 
-        /* Decoy elements to confuse source readers */
-        .decoy { display: none; }
+        .image-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #0a0a15;
+            border-radius: 10px;
+        }
+
+        .puzzle-image {
+            max-width: 100%;
+            border: 2px solid #00fff5;
+            border-radius: 5px;
+        }
+
+        .filename-hint {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 1 Complete!</div>
-        <span class="level-badge">LEVEL 2</span>
-        <h1><span class="secret-emoji" data-clicks="0">🎯</span> The Hidden Touch</h1>
+        <div class="success-badge">✅ Level 2 Complete!</div>
+        <span class="level-badge">LEVEL 3</span>
+        <h1>🔬 Inspect the Inspector</h1>
         
         <div class="puzzle-area">
-            <!-- Secret invisible dot in corner -->
-            <div class="secret-dot" id="secretDot"></div>
-            
             <p class="puzzle-text">
-                Some secrets require more than just looking<span class="secret-period" id="secretPeriod">.</span><br><br>
-                They require <strong>interaction</strong><span class="secret-period">.</span><br><br>
-                <span class="triple-click-zone" id="tripleZone">Click wisely, for not all clicks are equal.</span>
+                Every element on a webpage has properties.<br><br>
+                Sometimes the answer is hiding in plain sight,<br>
+                just one <strong>right-click</strong> away.
             </p>
+            
+            <div class="image-container">
+                <!-- The answer is hidden in the element attributes -->
+                <img 
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100'%3E%3Crect width='200' height='100' fill='%231a1a2e'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300fff5' font-family='monospace'%3E%3F%3F%3F%3C/text%3E%3C/svg%3E" 
+                    alt="The answer is: element"
+                    title="Look at my properties!"
+                    class="puzzle-image"
+                    data-secret="element"
+                    id="mysteryImage"
+                >
+                <p class="filename-hint">mystery.png</p>
+            </div>
             
             <p class="hint">
-                💡 Hint: The answer hides where you least expect to click...
+                💡 Hint: Right-click the image and "Inspect Element"... what do you see?
             </p>
-
-            <div class="answer-reveal" id="answerReveal">
-                🎉 You found it! The answer is: <strong>pixel</strong>
-            </div>
         </div>
-
-        <!-- Decoys to mislead source code readers -->
-        <div class="decoy">password: notthis</div>
-        <div class="decoy">answer: fakeanswer</div>
-        <div class="decoy">secret: tryagain</div>
 
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzle.otischan.dev/3<span class="editable">?????</span>.html
+                https://puzzle.otischan.dev/4<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="1begin.html" class="back-link">← Back to Level 1</a>
+        <a href="2source.html" class="back-link">← Back to Level 2</a>
     </div>
 
     <script>
-        // Obfuscated answer storage
-        const _0x = ['\x70','\x69','\x78','\x65','\x6c'];
-        const getAnswer = () => _0x.join('');
-
-        // Method 1: Secret dot click
-        document.getElementById('secretDot').addEventListener('click', function() {
-            revealAnswer();
-        });
-
-        // Method 2: Click on period
-        document.getElementById('secretPeriod').addEventListener('click', function() {
-            revealAnswer();
-        });
-
-        // Method 3: Triple-click detection
-        let clickCount = 0;
-        let clickTimer = null;
-        document.getElementById('tripleZone').addEventListener('click', function() {
-            clickCount++;
-            if (clickTimer) clearTimeout(clickTimer);
-            
-            if (clickCount === 3) {
-                revealAnswer();
-                clickCount = 0;
-            } else {
-                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-            }
-        });
-
-        // Method 4: Click emoji multiple times
-        const emoji = document.querySelector('.secret-emoji');
-        emoji.addEventListener('click', function() {
-            let clicks = parseInt(this.dataset.clicks) + 1;
-            this.dataset.clicks = clicks;
-            if (clicks >= 5) {
-                revealAnswer();
-            }
-        });
-
-        function revealAnswer() {
-            document.getElementById('answerReveal').classList.add('show');
-        }
-
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '3' + answer + '.html';
+                window.location.href = '4' + answer + '.html';
             }
         }
 
@@ -315,14 +229,6 @@
                 checkAnswer();
             }
         });
-
-        // Anti-debugging (optional - makes F12 harder)
-        // Uncomment to enable:
-        /*
-        setInterval(function() {
-            debugger;
-        }, 100);
-        */
     </script>
 </body>
 </html>

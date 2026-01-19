@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrong Answer - Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e94560;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+            text-align: center;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .error-badge {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #e94560;
+        }
+
+        .message {
+            color: #ffffff;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 30px 0;
+        }
+
+        .wrong-url {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #e94560;
+            margin: 20px 0;
+            word-break: break-all;
+            color: #e94560;
+            font-family: monospace;
+        }
+
+        .tips {
+            background: rgba(0, 255, 245, 0.1);
+            border: 1px solid #00fff5;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+
+        .tips h2 {
+            color: #00fff5;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .tips ul {
+            text-align: left;
+            margin-left: 30px;
+        }
+
+        .tips li {
+            color: #ffffff;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, #00fff5, #00b8b8);
+            color: #1a1a2e;
+        }
+
+        .btn-back:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 245, 0.6);
+        }
+
+        .btn-home {
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            color: #1a1a2e;
+        }
+
+        .btn-home:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .quote {
+            color: #666;
+            font-style: italic;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-badge">❌ WRONG ANSWER</div>
+        <h1>404</h1>
+        
+        <p class="message">
+            Oops! That's not the right answer.<br>
+            The puzzle is still waiting to be solved...
+        </p>
+
+        <div class="wrong-url" id="wrongUrl">
+            Loading...
+        </div>
+
+        <div class="tips">
+            <h2>💡 Need Help?</h2>
+            <ul>
+                <li>Double-check the clues on the puzzle page</li>
+                <li>Make sure your answer is in <strong>lowercase</strong></li>
+                <li>No spaces in the answer</li>
+                <li>Try viewing the page source or inspecting elements</li>
+                <li>Think outside the box!</li>
+            </ul>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-back" onclick="goBack()">↩ Try Again</button>
+            <a href="/index.html" class="btn btn-home">🏠 Start Over</a>
+        </div>
+
+        <p class="quote">
+            "The only real mistake is the one from which we learn nothing." - Henry Ford
+        </p>
+    </div>
+
+    <script>
+        // Display the wrong URL
+        document.getElementById('wrongUrl').textContent = window.location.href;
+
+        function goBack() {
+            // Try to determine which level they were attempting
+            const url = window.location.pathname;
+            const match = url.match(/(\d+)/);
+            
+            if (match) {
+                const attemptedLevel = parseInt(match[1]);
+                const previousLevel = attemptedLevel - 1;
+                
+                if (previousLevel >= 1) {
+                    // Try to go back to the previous level
+                    // We don't know the exact filename, so we'll use history.back()
+                    window.history.back();
+                } else {
+                    window.location.href = '/index.html';
+                }
+            } else {
+                // If we can't determine the level, just go back in history
+                window.history.back();
+            }
+        }
+
+        // Also allow using browser back button
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                goBack();
+            }
+        });
+    </script>
+</body>
+</html>

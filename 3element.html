@@ -68,6 +68,35 @@
             color: #00fff5;
             margin-top: 20px;
             font-style: italic;
+            font-size: 0.95em;
+            display: none;
+        }
+
+        .hint-btn {
+            display: none;
+            padding: 10px 25px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 5px;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .timer-display {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 15px;
+            font-style: italic;
         }
 
         /* SECRET AREA 1: Invisible clickable dot */
@@ -232,8 +261,9 @@
                 <span class="triple-click-zone" id="tripleZone">Click wisely, for not all clicks are equal.</span>
             </p>
             
-            <p class="hint">
-                💡 Hint: The answer hides where you least expect to click...
+            <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+            <p class="hint" id="hintText">
+                💡 The answer hides where you least expect to click...
             </p>
 
             <div class="answer-reveal" id="answerReveal">
@@ -263,6 +293,30 @@
         // Obfuscated answer storage
         const _0x = ['\x70','\x69','\x78','\x65','\x6c'];
         const getAnswer = () => _0x.join('');
+
+        let startTime = Date.now();
+        const waitTime = 1.5 * 60 * 1000; // 1.5 minutes in milliseconds
+
+        function showHint() {
+            document.getElementById('hintText').style.display = 'block';
+            document.getElementById('hintBtn').style.display = 'none';
+        }
+
+        function updateTimer() {
+            const elapsed = Date.now() - startTime;
+            const remaining = waitTime - elapsed;
+
+            if (remaining <= 0) {
+                document.getElementById('hintBtn').style.display = 'inline-block';
+                document.getElementById('timerDisplay').style.display = 'none';
+            } else {
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                document.getElementById('countdown').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                setTimeout(updateTimer, 1000);
+            }
+        }
 
         // Method 1: Secret dot click
         document.getElementById('secretDot').addEventListener('click', function() {
@@ -316,7 +370,8 @@
             }
         });
 
-       
+        // Initialize timer on page load
+        updateTimer();
     </script>
 </body>
 </html>

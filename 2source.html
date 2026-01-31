@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 2 - Web Puzzle Challenge</title>
+    <title>Level 3 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -23,14 +23,13 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             background: rgba(0, 0, 0, 0.7);
             border: 2px solid #e94560;
             border-radius: 10px;
             padding: 40px;
             box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
             text-align: center;
-            position: relative;
         }
 
         .level-badge {
@@ -55,7 +54,6 @@
             border-radius: 10px;
             padding: 30px;
             margin: 20px 0;
-            position: relative;
         }
 
         .puzzle-text {
@@ -68,6 +66,7 @@
             color: #00fff5;
             margin-top: 20px;
             font-style: italic;
+            font-size: 0.95em;
             display: none;
         }
 
@@ -91,62 +90,11 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
-        /* SECRET AREA 1: Invisible clickable dot */
-        .secret-dot {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: transparent;
-            border-radius: 50%;
-            cursor: default; /* Don't give it away with pointer cursor */
-            top: 15px;
-            right: 15px;
-            z-index: 100;
-        }
-
-        .secret-dot:hover {
-            /* Subtle hint on hover - barely visible */
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        /* SECRET AREA 2: Hidden in the period of a sentence */
-        .secret-period {
-            cursor: default;
-            position: relative;
-        }
-
-        /* SECRET AREA 3: The emoji itself is clickable */
-        .secret-emoji {
-            cursor: default;
-            user-select: none;
-        }
-
-        /* SECRET AREA 4: Triple-click required area */
-        .triple-click-zone {
-            display: inline;
-        }
-
-        /* Revealed answer styling */
-        .answer-reveal {
-            display: none;
-            background: linear-gradient(45deg, #00ff88, #00cc6a);
-            color: #1a1a2e;
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-            animation: popIn 0.5s ease;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .answer-reveal.show {
-            display: block;
+        .timer-display {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 15px;
+            font-style: italic;
         }
 
         .input-area {
@@ -233,63 +181,100 @@
             display: inline-block;
         }
 
-        /* Decoy elements to confuse source readers */
-        .decoy { display: none; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(6, 50px);
+            grid-template-rows: repeat(7, 50px);
+            margin: 30px auto;
+            width: fit-content;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            border: 2px solid black;
+            box-sizing: border-box;
+        }
+
+        .cell-full-white {
+            background: white;
+        }
+
+        .cell-full-black {
+            background: black;
+        }
+
+        .cell-half {
+            display: flex;
+        }
+
+        .half-left {
+            width: 50%;
+            height: 100%;
+        }
+
+        .half-right {
+            width: 50%;
+            height: 100%;
+        }
+
+        .black-bg {
+            background: black;
+        }
+
+        .white-bg {
+            background: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 1 Complete!</div>
-        <span class="level-badge">LEVEL 2</span>
-        <h1><span class="secret-emoji" data-clicks="0">🎯</span> The Hidden Touch</h1>
+        <div class="success-badge">✅ Level 2 Complete!</div>
+        <span class="level-badge">LEVEL 3</span>
+        <h1>🔲 The Grid</h1>
         
         <div class="puzzle-area">
-            <!-- Secret invisible dot in corner -->
-            <div class="secret-dot" id="secretDot"></div>
-            
             <p class="puzzle-text">
-                Some secrets require more than just looking<span class="secret-period" id="secretPeriod">.</span><br><br>
-                They require <strong>interaction</strong><span class="secret-period">.</span><br><br>
-                <span class="triple-click-zone" id="tripleZone">Click wisely, for not all clicks are equal.</span>
+                Look at the grid below.<br>
+                What do you see?
             </p>
+            
+            <div class="grid" id="puzzleGrid"></div>
             
             <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
             <p class="hint" id="hintText"></p>
-
-            <div class="answer-reveal" id="answerReveal">
-                🎉 You found it! The answer is: <strong>element</strong>
-            </div>
         </div>
-
-        <!-- Decoys to mislead source code readers -->
-        <div class="decoy">password: notthis</div>
-        <div class="decoy">answer: fakeanswer</div>
-        <div class="decoy">secret: tryagain</div>
 
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/3<span class="editable">???????</span>.html
+                https://puzzles.otischan.dev/4<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="1begin.html" class="back-link">← Back to Level 1</a>
+        <a href="2source.html" class="back-link">← Back to Level 2</a>
     </div>
 
     <script>
-        // Encrypted hint
-        const encryptedHint = "FhwBBwseHxsBBh4fExsEBQcYHh4fAxcaGAsJGhsNHxceBgsVEhwJDw4==";
+        const encryptedHint = "FBsXEh4aFQwDARYPDR4MDgYIFg0VBhkeDRMLAhkQDBoaBhQOAR4XBQwIEhwNGx0=";
         const key = 42;
         
-        // Obfuscated answer storage
-        const _0x = ['\x65','\x6c','\x65','\x6d','\x65','\x6e','\x74'];
-        const getAnswer = () => _0x.join('');
+        const grid_map = [
+            ["W", "W", "BW", "W", "W", "BB"], 
+            ["W", "W", "W", "W", "W", "W"],
+            ["W", "W", "W", "W", "W", "W"],
+            ["B", "W", "BW", "W", "W", "W"],
+            ["W", "W", "W", "W", "W", "W"],
+            ["W", "W", "W", "W", "W", "W"],
+            ["W", "W", "BW", "BW", "BW", "BB"] 
+        ];
 
         let startTime = Date.now();
-        const waitTime = 5 * 60 * 1000; // 5 minutes
+        const waitTime = 5 * 60 * 1000; // 5 minutes in milliseconds
 
         function decryptHint(encrypted, key) {
             const decoded = atob(encrypted);
@@ -313,54 +298,49 @@
 
             if (remaining <= 0) {
                 document.getElementById('hintBtn').style.display = 'inline-block';
+                document.getElementById('timerDisplay').style.display = 'none';
             } else {
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                document.getElementById('countdown').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
                 setTimeout(updateTimer, 1000);
             }
         }
 
-        // Method 1: Secret dot click
-        document.getElementById('secretDot').addEventListener('click', function() {
-            revealAnswer();
-        });
-
-        // Method 2: Click on period
-        document.getElementById('secretPeriod').addEventListener('click', function() {
-            revealAnswer();
-        });
-
-        // Method 3: Triple-click detection
-        let clickCount = 0;
-        let clickTimer = null;
-        document.getElementById('tripleZone').addEventListener('click', function() {
-            clickCount++;
-            if (clickTimer) clearTimeout(clickTimer);
+        function createGrid() {
+            const gridElement = document.getElementById('puzzleGrid');
             
-            if (clickCount === 3) {
-                revealAnswer();
-                clickCount = 0;
-            } else {
-                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-            }
-        });
-
-        // Method 4: Click emoji multiple times
-        const emoji = document.querySelector('.secret-emoji');
-        emoji.addEventListener('click', function() {
-            let clicks = parseInt(this.dataset.clicks) + 1;
-            this.dataset.clicks = clicks;
-            if (clicks >= 5) {
-                revealAnswer();
-            }
-        });
-
-        function revealAnswer() {
-            document.getElementById('answerReveal').classList.add('show');
+            grid_map.forEach(row => {
+                row.forEach(cellType => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    if (cellType === 'W') {
+                        cell.classList.add('cell-full-white');
+                    } else if (cellType === 'B') {
+                        cell.classList.add('cell-full-black');
+                    } else if (cellType === 'BW') {
+                        cell.classList.add('cell-half');
+                        const leftHalf = document.createElement('div');
+                        leftHalf.className = 'half-left black-bg';
+                        const rightHalf = document.createElement('div');
+                        rightHalf.className = 'half-right white-bg';
+                        cell.appendChild(leftHalf);
+                        cell.appendChild(rightHalf);
+                    } else if (cellType === 'BB') {
+                        cell.classList.add('cell-full-black');
+                    }
+                    
+                    gridElement.appendChild(cell);
+                });
+            });
         }
 
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '3' + answer + '.html';
+                window.location.href = '4' + answer + '.html';
             }
         }
 
@@ -370,15 +350,8 @@
             }
         });
 
-        // Anti-debugging (optional - makes F12 harder)
-        // Uncomment to enable:
-        /*
-        setInterval(function() {
-            debugger;
-        }, 100);
-        */
-        
-        // Initialize timer
+        // Initialize grid and timer on page load
+        createGrid();
         updateTimer();
     </script>
 </body>

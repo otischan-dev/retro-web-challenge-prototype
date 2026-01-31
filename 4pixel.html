@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 3 - Web Puzzle Challenge</title>
+    <title>Level 4 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -230,8 +230,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 2 Complete!</div>
-        <span class="level-badge">LEVEL 3</span>
+        <div class="success-badge">✅ Level 3 Complete!</div>
+        <span class="level-badge">LEVEL 4</span>
         <h1>🔲 The Grid</h1>
         
         <div class="puzzle-area">
@@ -249,14 +249,14 @@
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/4<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/5<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="2source.html" class="back-link">← Back to Level 2</a>
+        <a href="3element.html" class="back-link">← Back to Level 3</a>
     </div>
 
     <script>
@@ -340,7 +340,7 @@
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '4' + answer + '.html';
+                window.location.href = '5' + answer + '.html';
             }
         }
 

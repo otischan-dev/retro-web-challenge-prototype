@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 2 - Web Puzzle Challenge</title>
+    <title>Level 3 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -218,8 +218,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 1 Complete!</div>
-        <span class="level-badge">LEVEL 2</span>
+        <div class="success-badge">✅ Level 2 Complete!</div>
+        <span class="level-badge">LEVEL 3</span>
         <h1><span class="secret-emoji" data-clicks="0">🎯</span> The Hidden Touch</h1>
         
         <div class="puzzle-area">
@@ -249,14 +249,14 @@
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/3<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/4<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="1begin.html" class="back-link">← Back to Level 1</a>
+        <a href="2source.html" class="back-link">← Back to Level 2</a>
     </div>
 
     <script>
@@ -306,7 +306,7 @@
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '3' + answer + '.html';
+                window.location.href = '4' + answer + '.html';
             }
         }
 

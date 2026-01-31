@@ -67,6 +67,34 @@
             margin-top: 20px;
             font-style: italic;
             font-size: 0.95em;
+            display: none;
+        }
+
+        .hint-btn {
+            display: none;
+            padding: 10px 25px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 5px;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .timer-display {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 15px;
+            font-style: italic;
         }
 
         .input-area {
@@ -157,15 +185,16 @@
             display: grid;
             grid-template-columns: repeat(6, 50px);
             grid-template-rows: repeat(7, 50px);
-            gap: 2px;
-            background: black;
             margin: 30px auto;
+            width: fit-content;
         }
 
         .cell {
             width: 50px;
             height: 50px;
             display: flex;
+            border: 1px solid black;
+            box-sizing: border-box;
         }
 
         .cell-full-white {
@@ -213,9 +242,9 @@
             
             <div class="grid" id="puzzleGrid"></div>
             
-            <p class="hint">
-                💡 Hint: Sometimes you need to look at things from a different angle...
-            </p>
+            <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+            <p class="hint" id="hintText"></p>
+            <p class="timer-display" id="timerDisplay">Hint available in: <span id="countdown">5:00</span></p>
         </div>
 
         <div class="input-area">
@@ -232,6 +261,10 @@
     </div>
 
     <script>
+        // Encrypted hint (base64 + XOR with key)
+        const encryptedHint = "FBsXEh4aFQwDARYPDR4MDgYIFg0VBhkeDRMLAhkQDBoaBhQOAR4XBQwIEhwNGx0=";
+        const key = 42;
+        
         const grid_map = [
             ["W", "W", "BW", "W", "W", "BB"], 
             ["W", "W", "W", "W", "W", "W"],
@@ -241,6 +274,41 @@
             ["W", "W", "W", "W", "W", "W"],
             ["W", "W", "BW", "BW", "BW", "BB"] 
         ];
+
+        let startTime = Date.now();
+        const waitTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+        function decryptHint(encrypted, key) {
+            const decoded = atob(encrypted);
+            let decrypted = '';
+            for (let i = 0; i < decoded.length; i++) {
+                decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ key);
+            }
+            return decrypted;
+        }
+
+        function showHint() {
+            const hintText = decryptHint(encryptedHint, key);
+            document.getElementById('hintText').textContent = hintText;
+            document.getElementById('hintText').style.display = 'block';
+            document.getElementById('hintBtn').style.display = 'none';
+        }
+
+        function updateTimer() {
+            const elapsed = Date.now() - startTime;
+            const remaining = waitTime - elapsed;
+
+            if (remaining <= 0) {
+                document.getElementById('hintBtn').style.display = 'inline-block';
+                document.getElementById('timerDisplay').style.display = 'none';
+            } else {
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                document.getElementById('countdown').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                setTimeout(updateTimer, 1000);
+            }
+        }
 
         function createGrid() {
             const gridElement = document.getElementById('puzzleGrid');
@@ -284,8 +352,9 @@
             }
         });
 
-        // Initialize grid on page load
+        // Initialize grid and timer on page load
         createGrid();
+        updateTimer();
     </script>
 </body>
 </html>

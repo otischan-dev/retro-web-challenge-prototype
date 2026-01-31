@@ -153,23 +153,14 @@
             display: inline-block;
         }
 
-        .grid-container {
-            display: inline-block;
-            margin: 30px auto;
-            padding: 20px;
-            background: #0a0a15;
-            border-radius: 10px;
-            border: 2px solid #00fff5;
-        }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(6, 50px);
             grid-template-rows: repeat(7, 50px);
             gap: 2px;
-            background: #00fff5;
+            background: black;
             padding: 2px;
-            border: 2px solid #00fff5;
+            margin: 30px auto;
         }
 
         .cell {
@@ -221,9 +212,7 @@
                 What word is hidden in the pattern?
             </p>
             
-            <div class="grid-container">
-                <div class="grid" id="puzzleGrid"></div>
-            </div>
+            <div class="grid" id="puzzleGrid"></div>
             
             <p class="hint">
                 💡 Hint: Sometimes you need to look at things from a different angle...

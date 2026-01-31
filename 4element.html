@@ -193,7 +193,7 @@
             width: 50px;
             height: 50px;
             display: flex;
-            border: 1px solid black;
+            border: 2px solid black;
             box-sizing: border-box;
         }
 
@@ -232,19 +232,18 @@
     <div class="container">
         <div class="success-badge">✅ Level 3 Complete!</div>
         <span class="level-badge">LEVEL 4</span>
-        <h1>🔲 Pattern Recognition</h1>
+        <h1>🔲 The Grid</h1>
         
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Look carefully at the grid below.<br>
-                What word is hidden in the pattern?
+                Look at the grid below.<br>
+                What do you see?
             </p>
             
             <div class="grid" id="puzzleGrid"></div>
             
             <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
             <p class="hint" id="hintText"></p>
-            <p class="timer-display" id="timerDisplay">Hint available in: <span id="countdown">5:00</span></p>
         </div>
 
         <div class="input-area">
@@ -261,7 +260,6 @@
     </div>
 
     <script>
-        // Encrypted hint (base64 + XOR with key)
         const encryptedHint = "FBsXEh4aFQwDARYPDR4MDgYIFg0VBhkeDRMLAhkQDBoaBhQOAR4XBQwIEhwNGx0=";
         const key = 42;
         

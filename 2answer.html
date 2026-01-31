@@ -68,6 +68,27 @@
             color: #00fff5;
             margin-top: 20px;
             font-style: italic;
+            display: none;
+        }
+
+        .hint-btn {
+            display: none;
+            padding: 10px 25px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 5px;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
         /* SECRET AREA 1: Invisible clickable dot */
@@ -232,12 +253,11 @@
                 <span class="triple-click-zone" id="tripleZone">Click wisely, for not all clicks are equal.</span>
             </p>
             
-            <p class="hint">
-                💡 Hint: The answer hides where you least expect to click...
-            </p>
+            <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+            <p class="hint" id="hintText"></p>
 
             <div class="answer-reveal" id="answerReveal">
-                🎉 You found it! The answer is: <strong>pixel</strong>
+                🎉 You found it! The answer is: <strong>element</strong>
             </div>
         </div>
 
@@ -249,7 +269,7 @@
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/3<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/3<span class="editable">???????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
@@ -260,9 +280,43 @@
     </div>
 
     <script>
+        // Encrypted hint
+        const encryptedHint = "FhwBBwseHxsBBh4fExsEBQcYHh4fAxcaGAsJGhsNHxceBgsVEhwJDw4=";
+        const key = 42;
+        
         // Obfuscated answer storage
-        const _0x = ['\x70','\x69','\x78','\x65','\x6c'];
+        const _0x = ['\x65','\x6c','\x65','\x6d','\x65','\x6e','\x74'];
         const getAnswer = () => _0x.join('');
+
+        let startTime = Date.now();
+        const waitTime = 5 * 60 * 1000;
+
+        function decryptHint(encrypted, key) {
+            const decoded = atob(encrypted);
+            let decrypted = '';
+            for (let i = 0; i < decoded.length; i++) {
+                decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ key);
+            }
+            return decrypted;
+        }
+
+        function showHint() {
+            const hintText = decryptHint(encryptedHint, key);
+            document.getElementById('hintText').textContent = hintText;
+            document.getElementById('hintText').style.display = 'block';
+            document.getElementById('hintBtn').style.display = 'none';
+        }
+
+        function updateTimer() {
+            const elapsed = Date.now() - startTime;
+            const remaining = waitTime - elapsed;
+
+            if (remaining <= 0) {
+                document.getElementById('hintBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(updateTimer, 1000);
+            }
+        }
 
         // Method 1: Secret dot click
         document.getElementById('secretDot').addEventListener('click', function() {
@@ -316,7 +370,8 @@
             }
         });
 
-       
+        // Initialize timer
+        updateTimer();
     </script>
 </body>
 </html>

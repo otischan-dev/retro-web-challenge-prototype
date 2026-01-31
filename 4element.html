@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 3 - Web Puzzle Challenge</title>
+    <title>Level 4 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             background: rgba(0, 0, 0, 0.7);
             border: 2px solid #e94560;
             border-radius: 10px;
@@ -66,6 +66,7 @@
             color: #00fff5;
             margin-top: 20px;
             font-style: italic;
+            font-size: 0.95em;
         }
 
         .input-area {
@@ -152,75 +153,140 @@
             display: inline-block;
         }
 
-        .image-container {
-            margin: 20px 0;
+        .grid-container {
+            display: inline-block;
+            margin: 30px auto;
             padding: 20px;
             background: #0a0a15;
             border-radius: 10px;
-        }
-
-        .puzzle-image {
-            max-width: 100%;
             border: 2px solid #00fff5;
-            border-radius: 5px;
         }
 
-        .filename-hint {
-            color: #666;
-            font-size: 0.8em;
-            margin-top: 10px;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(6, 50px);
+            grid-template-rows: repeat(7, 50px);
+            gap: 2px;
+            background: #00fff5;
+            padding: 2px;
+            border: 2px solid #00fff5;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+        }
+
+        .cell-full-white {
+            background: white;
+        }
+
+        .cell-full-black {
+            background: black;
+        }
+
+        .cell-half {
+            display: flex;
+        }
+
+        .half-left {
+            width: 50%;
+            height: 100%;
+        }
+
+        .half-right {
+            width: 50%;
+            height: 100%;
+        }
+
+        .black-bg {
+            background: black;
+        }
+
+        .white-bg {
+            background: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 2 Complete!</div>
-        <span class="level-badge">LEVEL 3</span>
-        <h1>🔬 Inspect the Inspector</h1>
+        <div class="success-badge">✅ Level 3 Complete!</div>
+        <span class="level-badge">LEVEL 4</span>
+        <h1>🔲 Pattern Recognition</h1>
         
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Every element on a webpage has properties.<br><br>
-                Sometimes the answer is hiding in plain sight,<br>
-                just one <strong>right-click</strong> away.
+                Look carefully at the grid below.<br>
+                What word is hidden in the pattern?
             </p>
             
-            <div class="image-container">
-                <!-- The answer is hidden in the element attributes -->
-                <img 
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100'%3E%3Crect width='200' height='100' fill='%231a1a2e'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300fff5' font-family='monospace'%3E%3F%3F%3F%3C/text%3E%3C/svg%3E" 
-                    alt="The answer is: element"
-                    title="Look at my properties!"
-                    class="puzzle-image"
-                    data-secret="element"
-                    id="mysteryImage"
-                >
-                <p class="filename-hint">mystery.png</p>
+            <div class="grid-container">
+                <div class="grid" id="puzzleGrid"></div>
             </div>
             
             <p class="hint">
-                💡 Hint: Right-click the image and "Inspect Element"... what do you see?
+                💡 Hint: Sometimes you need to look at things from a different angle...
             </p>
         </div>
 
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/4<span class="editable">???????</span>.html
+                https://puzzles.otischan.dev/5<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="2source.html" class="back-link">← Back to Level 2</a>
+        <a href="3pixel.html" class="back-link">← Back to Level 3</a>
     </div>
 
     <script>
+        const grid_map = [
+            ["W", "W", "BW", "W", "W", "BB"], 
+            ["W", "W", "W", "W", "W", "W"],
+            ["W", "W", "W", "W", "W", "W"],
+            ["B", "W", "BW", "W", "W", "W"],
+            ["W", "W", "W", "W", "W", "W"],
+            ["W", "W", "W", "W", "W", "W"],
+            ["W", "W", "BW", "BW", "BW", "BB"] 
+        ];
+
+        function createGrid() {
+            const gridElement = document.getElementById('puzzleGrid');
+            
+            grid_map.forEach(row => {
+                row.forEach(cellType => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    if (cellType === 'W') {
+                        cell.classList.add('cell-full-white');
+                    } else if (cellType === 'B') {
+                        cell.classList.add('cell-full-black');
+                    } else if (cellType === 'BW') {
+                        cell.classList.add('cell-half');
+                        const leftHalf = document.createElement('div');
+                        leftHalf.className = 'half-left black-bg';
+                        const rightHalf = document.createElement('div');
+                        rightHalf.className = 'half-right white-bg';
+                        cell.appendChild(leftHalf);
+                        cell.appendChild(rightHalf);
+                    } else if (cellType === 'BB') {
+                        cell.classList.add('cell-full-black');
+                    }
+                    
+                    gridElement.appendChild(cell);
+                });
+            });
+        }
+
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '4' + answer + '.html';
+                window.location.href = '5' + answer + '.html';
             }
         }
 
@@ -229,6 +295,9 @@
                 checkAnswer();
             }
         });
+
+        // Initialize grid on page load
+        createGrid();
     </script>
 </body>
 </html>

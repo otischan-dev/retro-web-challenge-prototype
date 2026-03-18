@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 6 - Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #00ff88;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #00ff88;
+            border-radius: 15px;
+            padding: 50px;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+            text-align: center;
+            position: relative;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #0f0c29;
+            padding: 8px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .success-badge {
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            color: #0f0c29;
+            padding: 12px 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px #00ff88;
+            background: linear-gradient(45deg, #00ff88, #00fff5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .puzzle-area {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #00fff5;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .puzzle-text {
+            color: #ffffff;
+            font-size: 1.3em;
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+
+        .share-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 40px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .share-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid #a78bfa;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .share-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .share-icon {
+            width: 24px;
+            height: 24px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>') center/contain no-repeat;
+        }
+
+        .share-text {
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .user-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 35px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: 2px solid #fda4af;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .user-action-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        }
+
+        .icon-export {
+            width: 32px;
+            height: 32px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 11.75a.75.75 0 000 1.5h6a.75.75 0 000-1.5H9zm0 3.5a.75.75 0 000 1.5h6a.75.75 0 000-1.5H9zM19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 7h6c.39 0 .74.24.88.6l1.5 3.9c.08.21.12.44.12.67v.08c0 1.49-2.01 2.7-4.5 2.7s-4.5-1.21-4.5-2.7v-.08c0-.23.04-.46.12-.67l1.5-3.9c.14-.36.49-.6.88-.6z"/></svg>') center/contain no-repeat;
+        }
+
+        .action-label {
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .puzzle-instruction {
+            color: #ffd700;
+            font-size: 1em;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px dashed #ffd700;
+            border-radius: 8px;
+        }
+
+        .answer-area {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #00fff5;
+        }
+
+        .answer-area label {
+            display: block;
+            color: #00fff5;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 250px;
+            padding: 15px;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            background: #0f0c29;
+            border: 2px solid #00fff5;
+            border-radius: 8px;
+            color: #00fff5;
+            text-align: center;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 245, 0.6);
+            border-color: #00ff88;
+        }
+
+        .check-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            border: none;
+            border-radius: 8px;
+            color: #0f0c29;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .check-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #00ff88;
+        }
+
+        .hint-msg {
+            color: #00fff5;
+            font-size: 0.9em;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-badge">🎉 Level 5 Complete!</div>
+        <span class="level-badge">LEVEL 6 - FINAL CHALLENGE</span>
+        <h1>🏆 The Sharing Enigma</h1>
+        
+        <div class="puzzle-area">
+            <p class="puzzle-text">
+                Congratulations, puzzle master! 🎯<br>
+                You've reached the final stage.<br><br>
+                For this challenge, you must demonstrate your <strong>sharing spirit</strong>.<br>
+                Click both share buttons to unlock the answer!
+            </p>
+
+            <div class="puzzle-instruction">
+                💡 Interact with BOTH share buttons below to reveal the secret
+            </div>
+
+            <div class="share-section">
+                <div class="share-button" id="shareBtn1" onclick="clickShare(1)">
+                    <div class="share-icon"></div>
+                    <div class="share-text" title="Share or unshare">Share</div>
+                </div>
+
+                <div class="user-action-btn" id="shareBtn2" onclick="clickShare(2)">
+                    <div class="icon-export"></div>
+                    <div class="action-label" title="Share or unshare">Share</div>
+                </div>
+            </div>
+
+            <div class="hint-msg" id="hintMsg" style="display: none;">
+                🎊 Excellent! The answer is: <strong id="answerDisplay">victory</strong>
+            </div>
+        </div>
+
+        <div class="answer-area">
+            <label>Enter the answer to complete the challenge:</label>
+            <input type="text" id="answer" placeholder="your answer" autocomplete="off">
+            <br>
+            <button class="check-btn" onclick="checkAnswer()">Complete Challenge →</button>
+        </div>
+
+        <a href="5hello.html" class="back-link">← Back to Level 5</a>
+    </div>
+
+    <script>
+        let clickedButtons = new Set();
+
+        function clickShare(buttonNum) {
+            clickedButtons.add(buttonNum);
+            
+            const btn = document.getElementById('shareBtn' + buttonNum);
+            btn.style.opacity = '0.5';
+            btn.style.transform = 'scale(0.95)';
+            
+            if (clickedButtons.size === 2) {
+                setTimeout(() => {
+                    document.getElementById('hintMsg').style.display = 'block';
+                    document.getElementById('hintMsg').style.animation = 'popIn 0.5s ease';
+                }, 300);
+            }
+        }
+
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value.toLowerCase().trim();
+            if (answer === 'victory') {
+                alert('🎉 Congratulations! You\'ve completed all levels!\n\nYou are a true web puzzle master! 🏆');
+                document.body.style.background = 'linear-gradient(135deg, #ffd700 0%, #ff6b6b 50%, #4ecdc4 100%)';
+            } else if (answer) {
+                alert('❌ Not quite right. Keep trying!');
+            }
+        }
+
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes popIn {
+                0% { transform: scale(0); opacity: 0; }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

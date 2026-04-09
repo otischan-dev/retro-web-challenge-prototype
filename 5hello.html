@@ -179,6 +179,12 @@
             background: transparent;
         }
 
+        .auto-revealed {
+            color: #ffd700;
+            border-radius: 2px;
+            background: transparent;
+        }
+
         .punctuation {
             color: #ffffff;
         }
@@ -352,6 +358,7 @@
         let wrongGuesses = new Set();
         let guessCount = 0;
         let titleChars = new Set();
+        let gameWon = false;
 
         // Extract unique characters from title
         for (let char of articleData.title) {
@@ -367,6 +374,8 @@
                     html += `<span class="punctuation">${char}</span>`;
                 } else if (revealedChars.has(char)) {
                     html += `<span class="char-block revealed">${char}</span>`;
+                } else if (gameWon) {
+                    html += `<span class="char-block auto-revealed">${char}</span>`;
                 } else {
                     html += `<span class="char-block masked">█</span>`;
                 }
@@ -438,6 +447,8 @@
             input.value = '';
 
             if (checkWin()) {
+                gameWon = true;
+                renderArticle();
                 document.getElementById('winMessage').classList.add('show');
                 document.getElementById('guessBtn').disabled = true;
                 document.getElementById('guessInput').disabled = true;

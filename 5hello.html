@@ -285,6 +285,17 @@
             font-style: italic;
             font-size: 0.9em;
         }
+
+        .game-image {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #e94560;
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -293,6 +304,8 @@
         <span class="level-badge">LEVEL 5</span>
         <h1>📝 猜猜百科</h1>
         <p class="subtitle">你能用最少的次數猜出隱藏的百科標題嗎？</p>
+
+        <img src="6redacle.jpg" alt="Redactle Game" class="game-image">
 
         <div class="interaction-bar">
             <div class="guess-counter">猜測次數: <span id="guessCount">0</span></div>

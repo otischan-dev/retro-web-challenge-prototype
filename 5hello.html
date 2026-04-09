@@ -161,20 +161,27 @@
         }
 
         .masked {
+            display: inline-block;
             background: #e94560;
             color: #e94560;
             border-radius: 2px;
-            padding: 0 2px;
+            padding: 0 3px;
             margin: 0 1px;
+            border: 2px solid transparent;
+            min-width: 1.2em;
+            text-align: center;
         }
 
         .revealed {
+            display: inline-block;
             color: #00ff88;
             border: 2px solid #00ff88;
-            border-radius: 3px;
+            border-radius: 2px;
             padding: 0 3px;
             margin: 0 1px;
             background: transparent;
+            min-width: 1.2em;
+            text-align: center;
         }
 
         .punctuation {
@@ -290,7 +297,7 @@
         <div class="interaction-bar">
             <div class="guess-counter">猜測次數: <span id="guessCount">0</span></div>
             <div class="input-group">
-                <input type="text" id="guessInput" placeholder="輸入1～10個字" maxlength="10">
+                <input type="text" id="guessInput" placeholder="輸入1個字" maxlength="1">
                 <button class="guess-btn" id="guessBtn" onclick="makeGuess()">猜</button>
             </div>
             <p class="hint">💡 提示：輸入中文字詞來揭開隱藏的內容</p>
@@ -332,7 +339,6 @@
 
         // Punctuation that should not be masked
         const punctuation = /[，。、—「」（）：；！？\s\n\r]/;
-        const englishChars = /[A-Za-z0-9]/;
 
         let revealedChars = new Set();
         let wrongGuesses = new Set();
@@ -341,7 +347,7 @@
 
         // Extract unique characters from title
         for (let char of articleData.title) {
-            if (!punctuation.test(char) && !englishChars.test(char)) {
+            if (!punctuation.test(char)) {
                 titleChars.add(char);
             }
         }
@@ -350,8 +356,6 @@
             let html = '';
             for (let char of text) {
                 if (punctuation.test(char)) {
-                    html += `<span class="punctuation">${char}</span>`;
-                } else if (englishChars.test(char)) {
                     html += `<span class="punctuation">${char}</span>`;
                 } else if (revealedChars.has(char)) {
                     html += `<span class="char-block revealed">${char}</span>`;
@@ -396,7 +400,7 @@
             const input = document.getElementById('guessInput');
             const guess = input.value.trim();
             
-            if (guess.length === 0 || guess.length > 10) {
+            if (guess.length === 0 || guess.length > 1) {
                 return;
             }
 
@@ -407,7 +411,7 @@
             const fullText = articleData.title + articleData.paragraphs.join('');
 
             for (let char of guess) {
-                if (punctuation.test(char) || englishChars.test(char)) {
+                if (punctuation.test(char)) {
                     continue;
                 }
                 

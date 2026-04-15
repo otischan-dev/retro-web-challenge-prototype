@@ -32,6 +32,15 @@
             text-align: center;
         }
 
+        .success-badge {
+            background: #00ff88;
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
         .level-badge {
             display: inline-block;
             background: #e94560;
@@ -60,6 +69,110 @@
             color: #ffffff;
             font-size: 1.2em;
             line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .morse-display {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .morse-letter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .morse-letter .label {
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+
+        .morse-signals {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 30px;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            background: #00fff5;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0, 255, 245, 0.6);
+        }
+
+        .dash {
+            width: 40px;
+            height: 14px;
+            background: #00fff5;
+            border-radius: 7px;
+            box-shadow: 0 0 8px rgba(0, 255, 245, 0.6);
+        }
+
+        .morse-divider {
+            width: 2px;
+            height: 40px;
+            background: #333;
+            align-self: center;
+        }
+
+        .morse-letter:nth-child(1) .dot, .morse-letter:nth-child(1) .dash {
+            animation: blink 3s ease-in-out infinite;
+        }
+        .morse-letter:nth-child(3) .dot, .morse-letter:nth-child(3) .dash {
+            animation: blink 3s ease-in-out infinite 0.5s;
+        }
+        .morse-letter:nth-child(5) .dot, .morse-letter:nth-child(5) .dash {
+            animation: blink 3s ease-in-out infinite 1s;
+        }
+        .morse-letter:nth-child(7) .dot, .morse-letter:nth-child(7) .dash {
+            animation: blink 3s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .reference-table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .reference-table caption {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .reference-table td {
+            padding: 5px 12px;
+            color: #ccc;
+            border-bottom: 1px solid #222;
+            text-align: left;
+        }
+
+        .reference-table td:first-child,
+        .reference-table td:nth-child(3) {
+            color: #ffd700;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .reference-table td:nth-child(2),
+        .reference-table td:nth-child(4) {
+            color: #00fff5;
+            font-family: monospace;
+            letter-spacing: 3px;
         }
 
         .hint {
@@ -171,85 +284,95 @@
         .back-link:hover {
             color: #e94560;
         }
-
-        .success-badge {
-            background: #00ff88;
-            color: #1a1a2e;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(6, 50px);
-            grid-template-rows: repeat(7, 50px);
-            margin: 30px auto;
-            width: fit-content;
-        }
-
-        .cell {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            border: 2px solid black;
-            box-sizing: border-box;
-        }
-
-        .cell-full-white {
-            background: white;
-        }
-
-        .cell-full-black {
-            background: black;
-        }
-
-        .cell-half {
-            display: flex;
-        }
-
-        .half-left {
-            width: 50%;
-            height: 100%;
-        }
-
-        .half-right {
-            width: 50%;
-            height: 100%;
-        }
-
-        .black-bg {
-            background: black;
-        }
-
-        .white-bg {
-            background: white;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="success-badge">✅ Level 3 Complete!</div>
         <span class="level-badge">LEVEL 4</span>
-        <h1>🔲 The Grid</h1>
+        <h1>📡 The Signal</h1>
         
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Look at the grid below.<br>
-                What do you see?
+                A strange transmission has been intercepted.<br>
+                Can you decode the message?
             </p>
-            
-            <div class="grid" id="puzzleGrid"></div>
-            
+
+            <div class="morse-display">
+                <!-- G: dash dash dot -->
+                <div class="morse-letter">
+                    <span class="label">1</span>
+                    <div class="morse-signals">
+                        <div class="dash"></div>
+                        <div class="dash"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+
+                <div class="morse-divider"></div>
+
+                <!-- R: dot dash dot -->
+                <div class="morse-letter">
+                    <span class="label">2</span>
+                    <div class="morse-signals">
+                        <div class="dot"></div>
+                        <div class="dash"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+
+                <div class="morse-divider"></div>
+
+                <!-- I: dot dot -->
+                <div class="morse-letter">
+                    <span class="label">3</span>
+                    <div class="morse-signals">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+
+                <div class="morse-divider"></div>
+
+                <!-- D: dash dot dot -->
+                <div class="morse-letter">
+                    <span class="label">4</span>
+                    <div class="morse-signals">
+                        <div class="dash"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="reference-table">
+                <caption>📖 Morse Code Reference</caption>
+                <tr><td>A</td><td>·−</td><td>N</td><td>−·</td></tr>
+                <tr><td>B</td><td>−···</td><td>O</td><td>−−−</td></tr>
+                <tr><td>C</td><td>−·−·</td><td>P</td><td>·−−·</td></tr>
+                <tr><td>D</td><td>−··</td><td>Q</td><td>−−·−</td></tr>
+                <tr><td>E</td><td>·</td><td>R</td><td>·−·</td></tr>
+                <tr><td>F</td><td>··−·</td><td>S</td><td>···</td></tr>
+                <tr><td>G</td><td>−−·</td><td>T</td><td>−</td></tr>
+                <tr><td>H</td><td>····</td><td>U</td><td>··−</td></tr>
+                <tr><td>I</td><td>··</td><td>V</td><td>···−</td></tr>
+                <tr><td>J</td><td>·−−−</td><td>W</td><td>·−−</td></tr>
+                <tr><td>K</td><td>−·−</td><td>X</td><td>−··−</td></tr>
+                <tr><td>L</td><td>·−··</td><td>Y</td><td>−·−−</td></tr>
+                <tr><td>M</td><td>−−</td><td>Z</td><td>−−··</td></tr>
+            </table>
+
+            <p class="timer-display" id="timerDisplay">💡 Hint available in <span id="countdown"></span></p>
             <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
-            <p class="hint" id="hintText"></p>
+            <p class="hint" id="hintText">
+                💡 Short circle = dot (·), long bar = dash (−). Match each group to a letter in the reference table.
+            </p>
         </div>
 
         <div class="input-area">
-            <label>Enter the answer to proceed:</label>
+            <label>Enter the decoded word to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/5<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/5<span class="editable">????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
@@ -260,34 +383,10 @@
     </div>
 
     <script>
-        const encryptedHint = "XlhTCl5FCl9ZTwpTRV9YClpCRURP";
-        const key = 42;
-        
-        const grid_map = [
-            ["W", "W", "BW", "W", "W", "BB"], 
-            ["W", "W", "W", "W", "W", "W"],
-            ["W", "W", "W", "W", "W", "W"],
-            ["B", "W", "BW", "W", "W", "W"],
-            ["W", "W", "W", "W", "W", "W"],
-            ["W", "W", "W", "W", "W", "W"],
-            ["W", "W", "BW", "BW", "BW", "BB"] 
-        ];
-
         let startTime = Date.now();
-        const waitTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-        function decryptHint(encrypted, key) {
-            const decoded = atob(encrypted);
-            let decrypted = '';
-            for (let i = 0; i < decoded.length; i++) {
-                decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ key);
-            }
-            return decrypted;
-        }
+        const waitTime = 2 * 60 * 1000;
 
         function showHint() {
-            const hintText = decryptHint(encryptedHint, key);
-            document.getElementById('hintText').textContent = hintText;
             document.getElementById('hintText').style.display = 'block';
             document.getElementById('hintBtn').style.display = 'none';
         }
@@ -302,39 +401,10 @@
             } else {
                 const minutes = Math.floor(remaining / 60000);
                 const seconds = Math.floor((remaining % 60000) / 1000);
-                document.getElementById('countdown').textContent = 
+                document.getElementById('countdown').textContent =
                     `${minutes}:${seconds.toString().padStart(2, '0')}`;
                 setTimeout(updateTimer, 1000);
             }
-        }
-
-        function createGrid() {
-            const gridElement = document.getElementById('puzzleGrid');
-            
-            grid_map.forEach(row => {
-                row.forEach(cellType => {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    
-                    if (cellType === 'W') {
-                        cell.classList.add('cell-full-white');
-                    } else if (cellType === 'B') {
-                        cell.classList.add('cell-full-black');
-                    } else if (cellType === 'BW') {
-                        cell.classList.add('cell-half');
-                        const leftHalf = document.createElement('div');
-                        leftHalf.className = 'half-left black-bg';
-                        const rightHalf = document.createElement('div');
-                        rightHalf.className = 'half-right white-bg';
-                        cell.appendChild(leftHalf);
-                        cell.appendChild(rightHalf);
-                    } else if (cellType === 'BB') {
-                        cell.classList.add('cell-full-black');
-                    }
-                    
-                    gridElement.appendChild(cell);
-                });
-            });
         }
 
         function checkAnswer() {
@@ -350,8 +420,6 @@
             }
         });
 
-        // Initialize grid and timer on page load
-        createGrid();
         updateTimer();
     </script>
 </body>

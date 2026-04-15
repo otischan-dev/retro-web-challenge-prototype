@@ -127,52 +127,21 @@
             animation: blink 3s ease-in-out infinite;
         }
         .morse-letter:nth-child(3) .dot, .morse-letter:nth-child(3) .dash {
-            animation: blink 3s ease-in-out infinite 0.5s;
+            animation: blink 3s ease-in-out infinite 0.4s;
         }
         .morse-letter:nth-child(5) .dot, .morse-letter:nth-child(5) .dash {
-            animation: blink 3s ease-in-out infinite 1s;
+            animation: blink 3s ease-in-out infinite 0.8s;
         }
         .morse-letter:nth-child(7) .dot, .morse-letter:nth-child(7) .dash {
-            animation: blink 3s ease-in-out infinite 1.5s;
+            animation: blink 3s ease-in-out infinite 1.2s;
+        }
+        .morse-letter:nth-child(9) .dot, .morse-letter:nth-child(9) .dash {
+            animation: blink 3s ease-in-out infinite 1.6s;
         }
 
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
-        }
-
-        .reference-table {
-            margin: 30px auto;
-            border-collapse: collapse;
-            font-size: 0.9em;
-        }
-
-        .reference-table caption {
-            color: #ffd700;
-            margin-bottom: 10px;
-            font-size: 1em;
-            font-weight: bold;
-        }
-
-        .reference-table td {
-            padding: 5px 12px;
-            color: #ccc;
-            border-bottom: 1px solid #222;
-            text-align: left;
-        }
-
-        .reference-table td:first-child,
-        .reference-table td:nth-child(3) {
-            color: #ffd700;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .reference-table td:nth-child(2),
-        .reference-table td:nth-child(4) {
-            color: #00fff5;
-            font-family: monospace;
-            letter-spacing: 3px;
         }
 
         .hint {
@@ -299,13 +268,24 @@
             </p>
 
             <div class="morse-display">
-                <!-- G: dash dash dot -->
+                <!-- M: dash dash -->
                 <div class="morse-letter">
                     <span class="label">1</span>
                     <div class="morse-signals">
                         <div class="dash"></div>
                         <div class="dash"></div>
-                        <div class="dot"></div>
+                    </div>
+                </div>
+
+                <div class="morse-divider"></div>
+
+                <!-- O: dash dash dash -->
+                <div class="morse-letter">
+                    <span class="label">2</span>
+                    <div class="morse-signals">
+                        <div class="dash"></div>
+                        <div class="dash"></div>
+                        <div class="dash"></div>
                     </div>
                 </div>
 
@@ -313,66 +293,48 @@
 
                 <!-- R: dot dash dot -->
                 <div class="morse-letter">
-                    <span class="label">2</span>
-                    <div class="morse-signals">
-                        <div class="dot"></div>
-                        <div class="dash"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-
-                <div class="morse-divider"></div>
-
-                <!-- I: dot dot -->
-                <div class="morse-letter">
                     <span class="label">3</span>
                     <div class="morse-signals">
                         <div class="dot"></div>
+                        <div class="dash"></div>
                         <div class="dot"></div>
                     </div>
                 </div>
 
                 <div class="morse-divider"></div>
 
-                <!-- D: dash dot dot -->
+                <!-- S: dot dot dot -->
                 <div class="morse-letter">
                     <span class="label">4</span>
                     <div class="morse-signals">
-                        <div class="dash"></div>
                         <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+
+                <div class="morse-divider"></div>
+
+                <!-- E: dot -->
+                <div class="morse-letter">
+                    <span class="label">5</span>
+                    <div class="morse-signals">
                         <div class="dot"></div>
                     </div>
                 </div>
             </div>
 
-            <table class="reference-table">
-                <caption>📖 Morse Code Reference</caption>
-                <tr><td>A</td><td>·−</td><td>N</td><td>−·</td></tr>
-                <tr><td>B</td><td>−···</td><td>O</td><td>−−−</td></tr>
-                <tr><td>C</td><td>−·−·</td><td>P</td><td>·−−·</td></tr>
-                <tr><td>D</td><td>−··</td><td>Q</td><td>−−·−</td></tr>
-                <tr><td>E</td><td>·</td><td>R</td><td>·−·</td></tr>
-                <tr><td>F</td><td>··−·</td><td>S</td><td>···</td></tr>
-                <tr><td>G</td><td>−−·</td><td>T</td><td>−</td></tr>
-                <tr><td>H</td><td>····</td><td>U</td><td>··−</td></tr>
-                <tr><td>I</td><td>··</td><td>V</td><td>···−</td></tr>
-                <tr><td>J</td><td>·−−−</td><td>W</td><td>·−−</td></tr>
-                <tr><td>K</td><td>−·−</td><td>X</td><td>−··−</td></tr>
-                <tr><td>L</td><td>·−··</td><td>Y</td><td>−·−−</td></tr>
-                <tr><td>M</td><td>−−</td><td>Z</td><td>−−··</td></tr>
-            </table>
-
             <p class="timer-display" id="timerDisplay">💡 Hint available in <span id="countdown"></span></p>
             <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
             <p class="hint" id="hintText">
-                💡 Short circle = dot (·), long bar = dash (−). Match each group to a letter in the reference table.
+                💡 Short circle = dot, long bar = dash. This is a well-known encoding system — search for it!
             </p>
         </div>
 
         <div class="input-area">
             <label>Enter the decoded word to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/5<span class="editable">????</span>.html
+                https://puzzles.otischan.dev/5<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>

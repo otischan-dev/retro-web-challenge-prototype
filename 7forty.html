@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 7 - Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'PingFang TC', 'Microsoft JhengHei', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e94560;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+            text-align: center;
+        }
+
+        .success-badge {
+            background: #00ff88;
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #e94560;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+
+        .interaction-bar {
+            background: #0a0a15;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .guess-counter {
+            color: #ffd700;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 12px;
+            font-size: 1.1em;
+            font-family: 'Courier New', 'Microsoft JhengHei', monospace;
+            background: #1a1a2e;
+            border: 2px solid #00fff5;
+            border-radius: 5px;
+            color: #00fff5;
+            text-align: center;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
+        }
+
+        input[type="text"]::placeholder {
+            color: #666;
+        }
+
+        .guess-btn {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #00fff5, #00b8b8);
+            border: none;
+            border-radius: 5px;
+            color: #1a1a2e;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .guess-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 245, 0.6);
+        }
+
+        .guess-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .puzzle-area {
+            background: #1a1a2e;
+            border: 1px solid #00fff5;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .article-title {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .article-content {
+            line-height: 2.2;
+            font-size: 1.1em;
+        }
+
+        .article-content p {
+            margin-bottom: 15px;
+        }
+
+        .char-block {
+            display: inline-block;
+            width: 1.1em;
+            height: 1.1em;
+            line-height: 1.1em;
+            text-align: center;
+            margin: 1px;
+            vertical-align: middle;
+        }
+
+        .masked {
+            background: #e94560;
+            color: #e94560;
+            border-radius: 2px;
+        }
+
+        .revealed {
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            border-radius: 2px;
+            background: transparent;
+        }
+
+        .auto-revealed {
+            color: #ffd700;
+            border-radius: 2px;
+            background: transparent;
+        }
+
+        .punctuation {
+            color: #ffffff;
+        }
+
+        .graveyard {
+            background: #0a0a15;
+            border: 1px solid #e94560;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .graveyard-title {
+            color: #e94560;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        .graveyard-chars {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .wrong-char {
+            background: #c44;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 1em;
+        }
+
+        .stats-footer {
+            margin-top: 25px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .win-message {
+            display: none;
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #1a1a2e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.3em;
+            animation: popIn 0.5s ease;
+        }
+
+        .win-message.show {
+            display: block;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .next-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #e94560, #c93555);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.6);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .back-link:hover {
+            color: #e94560;
+        }
+
+        .hint {
+            color: #00fff5;
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        .game-image {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #e94560;
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .lang-notice {
+            background: #2a2a4e;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .lang-notice p {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .skip-link {
+            display: inline-block;
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid #888;
+            border-radius: 5px;
+            color: #888;
+            font-size: 0.85em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .skip-link:hover {
+            border-color: #e94560;
+            color: #e94560;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lang-notice" style="display: flex; justify-content: center; align-items: center; gap: 15px; padding: 8px; background: rgba(42, 42, 78, 0.5); margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 0.85em; color: #aaa;">Non-Chinese speaker?</p>
+            <a href="8redac.html" class="skip-link" style="margin: 0; padding: 6px 15px; font-size: 0.85em;">Skip this level</a>
+        </div>
+
+        <div class="success-badge">🎉 Level 6 Complete! 🎉</div>
+        <span class="level-badge">LEVEL 7</span>
+        <h1>📝 猜猜禮物</h1>
+        <div class="subtitle" style="margin-bottom: 15px;">
+            <p>這是一段類似維基百科的描述，你能用最少次數猜出禮物的完整名稱嗎？</p>
+            <p style="color: #00fff5; margin-top: 8px; font-weight: bold; font-size: 1.1em;">🎯 目標：猜出標題的所有字</p>
+        </div>
+
+        <img src="7gift.jpg" alt="Redactle Game" class="game-image">
+
+        <div class="interaction-bar">
+            <div class="guess-counter">猜測次數: <span id="guessCount">0</span></div>
+            <div class="input-group">
+                <input type="text" id="guessInput" placeholder="輸入1個字" maxlength="1">
+                <button class="guess-btn" id="guessBtn" onclick="makeGuess()">猜</button>
+            </div>
+            <p class="hint">💡 提示：每次輸入1個字來揭開隱藏內容</p>
+        </div>
+
+        <div class="puzzle-area">
+            <div class="article-title" id="articleTitle"></div>
+            <div class="article-content" id="articleContent"></div>
+        </div>
+
+        <div class="graveyard">
+            <div class="graveyard-title">❌ 錯誤猜測</div>
+            <div class="graveyard-chars" id="graveyardChars"></div>
+        </div>
+
+        <div class="win-message" id="winMessage">
+            🏆 恭喜你猜出了標題！ 🏆
+            <br><br>
+            <a href="8redac.html" class="next-btn">前往下一關 →</a>
+        </div>
+
+        <a href="6hello.html" class="back-link">← 返回 Level 6</a>
+    </div>
+
+    <script>
+        const articleData = {
+            title: "迷你行李箱指甲刀套裝",
+            paragraphs: [
+                "迷你行李箱指甲刀套裝，是一款結合了創意設計與實用功能的日常個人護理用品。",
+                "從外觀設計來看，它採用了高度仿真的微縮旅行箱造型。外殼表面帶有經典的直條紋理，底部配有四個微型車輪，頂部則設有小巧的把手，整體視覺效果猶如一個迷你版的行李喼。其材質多為輕便的塑膠，市面上常見的款式涵蓋了沉穩的深藍色以及充滿活力的淺綠色，商品正面通常印有「MANICURE」（美甲）的英文字樣。",
+                "在功能性方面，這款便攜式美甲工具組雖然體積細小，但內部卻收納了多種修甲配件。打開箱體，通常會包含不鏽鋼指甲鉗、指甲銼刀、美容小剪刀等基礎清潔工具，能充分滿足消費者日常指甲修剪與手部護理的需求。",
+                "由於其體積精巧、易於隨身攜帶，這款產品不僅非常適合在旅遊出行時放入化妝包內備用，更因為其獨特且充滿趣味性的立體外觀，打破了傳統衛生用品的刻板印象，成為許多年輕人挑選創意小禮物、交換禮物或節日伴手禮的熱門選擇。"
+            ]
+        };
+
+        // Punctuation that should not be masked
+        const punctuation = /[，。、—「」（）：；！？\s\n\r]/;
+
+        let revealedChars = new Set();
+        let wrongGuesses = new Set();
+        let guessCount = 0;
+        let titleChars = new Set();
+        let gameWon = false;
+
+        // Extract unique characters from title
+        for (let char of articleData.title) {
+            if (!punctuation.test(char)) {
+                titleChars.add(char);
+            }
+        }
+
+        function renderText(text, isTitle = false) {
+            let html = '';
+            for (let char of text) {
+                if (punctuation.test(char)) {
+                    html += `<span class="punctuation">${char}</span>`;
+                } else if (revealedChars.has(char)) {
+                    html += `<span class="char-block revealed">${char}</span>`;
+                } else if (gameWon) {
+                    html += `<span class="char-block auto-revealed">${char}</span>`;
+                } else {
+                    html += `<span class="char-block masked">█</span>`;
+                }
+            }
+            return html;
+        }
+
+        function renderArticle() {
+            document.getElementById('articleTitle').innerHTML = renderText(articleData.title, true);
+            
+            let contentHtml = '';
+            for (let para of articleData.paragraphs) {
+                contentHtml += `<p>${renderText(para)}</p>`;
+            }
+            document.getElementById('articleContent').innerHTML = contentHtml;
+        }
+
+        function renderGraveyard() {
+            const container = document.getElementById('graveyardChars');
+            container.innerHTML = '';
+            for (let char of wrongGuesses) {
+                const span = document.createElement('span');
+                span.className = 'wrong-char';
+                span.textContent = char;
+                container.appendChild(span);
+            }
+        }
+
+        function checkWin() {
+            for (let char of titleChars) {
+                if (!revealedChars.has(char)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function makeGuess() {
+            const input = document.getElementById('guessInput');
+            const guess = input.value.trim();
+            
+            if (guess.length === 0 || guess.length > 1) {
+                return;
+            }
+
+            guessCount++;
+            document.getElementById('guessCount').textContent = guessCount;
+
+            let foundAny = false;
+            const fullText = articleData.title + articleData.paragraphs.join('');
+
+            for (let char of guess) {
+                if (punctuation.test(char)) {
+                    continue;
+                }
+                
+                if (fullText.includes(char)) {
+                    revealedChars.add(char);
+                    foundAny = true;
+                } else {
+                    if (!revealedChars.has(char)) {
+                        wrongGuesses.add(char);
+                    }
+                }
+            }
+
+            renderArticle();
+            renderGraveyard();
+            input.value = '';
+
+            if (checkWin()) {
+                gameWon = true;
+                renderArticle();
+                document.getElementById('winMessage').classList.add('show');
+                document.getElementById('guessBtn').disabled = true;
+                document.getElementById('guessInput').disabled = true;
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('guessInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                makeGuess();
+            }
+        });
+
+        // Initial render
+        renderArticle();
+    </script>
+</body>
+</html>

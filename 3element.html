@@ -64,69 +64,9 @@
             line-height: 1.8;
         }
 
-        .hint {
-            color: #00fff5;
-            margin-top: 20px;
-            font-style: italic;
-            font-size: 0.95em;
-            display: none;
-        }
-
-        .hint-btn {
-            display: none;
-            padding: 10px 25px;
-            margin-top: 20px;
-            background: linear-gradient(45deg, #ffd700, #ffaa00);
-            border: none;
-            border-radius: 5px;
-            color: #1a1a2e;
-            font-size: 0.9em;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .hint-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        }
-
-        .timer-display {
-            color: #666;
-            font-size: 0.85em;
-            margin-top: 15px;
-            font-style: italic;
-        }
-
-        .secret-dot {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: transparent;
-            border-radius: 50%;
-            cursor: default;
-            top: 15px;
-            right: 15px;
-            z-index: 100;
-        }
-
-        .secret-dot:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .secret-period {
-            cursor: default;
-            position: relative;
-        }
-
         .secret-emoji {
             cursor: default;
             user-select: none;
-        }
-
-        .triple-click-zone {
-            display: inline;
         }
 
         .answer-reveal {
@@ -245,17 +185,10 @@
         <h1><span class="secret-emoji" data-clicks="0">🎯</span> The Hidden Touch</h1>
         
         <div class="puzzle-area">
-            <div class="secret-dot" id="secretDot"></div>
-            
             <p class="puzzle-text">
-                Some secrets require more than just looking<span class="secret-period" id="secretPeriod">.</span><br><br>
-                They require <strong>interaction</strong><span class="secret-period">.</span><br><br>
-                <span class="triple-click-zone" id="tripleZone">Click wisely, for not all clicks are equal.</span>
-            </p>
-            
-            <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
-            <p class="hint" id="hintText">
-                💡 The answer hides where you least expect to click...
+                Some secrets require more than just looking.<br><br>
+                They require <strong>interaction</strong>.<br><br>
+                Click wisely, for not all clicks are equal.
             </p>
 
             <div class="answer-reveal" id="answerReveal">
@@ -284,57 +217,11 @@
         const _0x = ['\x70','\x69','\x78','\x65','\x6c'];
         const getAnswer = () => _0x.join('');
 
-        let startTime = Date.now();
-        const waitTime = 1.5 * 60 * 1000;
-
-        function showHint() {
-            document.getElementById('hintText').style.display = 'block';
-            document.getElementById('hintBtn').style.display = 'none';
-        }
-
-        function updateTimer() {
-            const elapsed = Date.now() - startTime;
-            const remaining = waitTime - elapsed;
-
-            if (remaining <= 0) {
-                document.getElementById('hintBtn').style.display = 'inline-block';
-                document.getElementById('timerDisplay').style.display = 'none';
-            } else {
-                const minutes = Math.floor(remaining / 60000);
-                const seconds = Math.floor((remaining % 60000) / 1000);
-                document.getElementById('countdown').textContent = 
-                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                setTimeout(updateTimer, 1000);
-            }
-        }
-
-        document.getElementById('secretDot').addEventListener('click', function() {
-            revealAnswer();
-        });
-
-        document.getElementById('secretPeriod').addEventListener('click', function() {
-            revealAnswer();
-        });
-
-        let clickCount = 0;
-        let clickTimer = null;
-        document.getElementById('tripleZone').addEventListener('click', function() {
-            clickCount++;
-            if (clickTimer) clearTimeout(clickTimer);
-            
-            if (clickCount === 3) {
-                revealAnswer();
-                clickCount = 0;
-            } else {
-                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-            }
-        });
-
         const emoji = document.querySelector('.secret-emoji');
         emoji.addEventListener('click', function() {
             let clicks = parseInt(this.dataset.clicks) + 1;
             this.dataset.clicks = clicks;
-            if (clicks >= 5) {
+            if (clicks >= 3) {
                 revealAnswer();
             }
         });
@@ -355,8 +242,6 @@
                 checkAnswer();
             }
         });
-
-        updateTimer();
     </script>
 </body>
 </html>

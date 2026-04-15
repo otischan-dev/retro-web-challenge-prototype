@@ -144,41 +144,6 @@
             50% { opacity: 0.3; }
         }
 
-        .hint {
-            color: #00fff5;
-            margin-top: 20px;
-            font-style: italic;
-            font-size: 0.95em;
-            display: none;
-        }
-
-        .hint-btn {
-            display: none;
-            padding: 10px 25px;
-            margin-top: 20px;
-            background: linear-gradient(45deg, #ffd700, #ffaa00);
-            border: none;
-            border-radius: 5px;
-            color: #1a1a2e;
-            font-size: 0.9em;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .hint-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        }
-
-        .timer-display {
-            color: #666;
-            font-size: 0.85em;
-            margin-top: 15px;
-            font-style: italic;
-        }
-
         .input-area {
             margin-top: 30px;
         }
@@ -323,12 +288,6 @@
                     </div>
                 </div>
             </div>
-
-            <p class="timer-display" id="timerDisplay">💡 Hint available in <span id="countdown"></span></p>
-            <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
-            <p class="hint" id="hintText">
-                💡 Short circle = dot, long bar = dash. This is a well-known encoding system — search for it!
-            </p>
         </div>
 
         <div class="input-area">
@@ -345,30 +304,6 @@
     </div>
 
     <script>
-        let startTime = Date.now();
-        const waitTime = 2 * 60 * 1000;
-
-        function showHint() {
-            document.getElementById('hintText').style.display = 'block';
-            document.getElementById('hintBtn').style.display = 'none';
-        }
-
-        function updateTimer() {
-            const elapsed = Date.now() - startTime;
-            const remaining = waitTime - elapsed;
-
-            if (remaining <= 0) {
-                document.getElementById('hintBtn').style.display = 'inline-block';
-                document.getElementById('timerDisplay').style.display = 'none';
-            } else {
-                const minutes = Math.floor(remaining / 60000);
-                const seconds = Math.floor((remaining % 60000) / 1000);
-                document.getElementById('countdown').textContent =
-                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                setTimeout(updateTimer, 1000);
-            }
-        }
-
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
@@ -381,8 +316,6 @@
                 checkAnswer();
             }
         });
-
-        updateTimer();
     </script>
 </body>
 </html>

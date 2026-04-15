@@ -121,41 +121,6 @@
             margin: 25px 0 10px;
         }
 
-        .hint {
-            color: #00fff5;
-            margin-top: 20px;
-            font-style: italic;
-            font-size: 0.95em;
-            display: none;
-        }
-
-        .hint-btn {
-            display: none;
-            padding: 10px 25px;
-            margin-top: 20px;
-            background: linear-gradient(45deg, #ffd700, #ffaa00);
-            border: none;
-            border-radius: 5px;
-            color: #1a1a2e;
-            font-size: 0.9em;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .hint-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        }
-
-        .timer-display {
-            color: #666;
-            font-size: 0.85em;
-            margin-top: 15px;
-            font-style: italic;
-        }
-
         .input-area {
             margin-top: 30px;
         }
@@ -261,12 +226,6 @@
             </div>
 
             <p class="question">What is the value of d?</p>
-
-            <p class="timer-display" id="timerDisplay">💡 Hint available in <span id="countdown"></span></p>
-            <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
-            <p class="hint" id="hintText">
-                💡 Look for similar triangles within the figure.
-            </p>
         </div>
 
         <div class="input-area">
@@ -274,7 +233,6 @@
             <div class="url-display">
                 https://puzzles.otischan.dev/7<span class="editable">?????</span>.html
             </div>
-            <p class="answer-note">⚠️ Write the number as a word (e.g. "twenty")</p>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
@@ -284,30 +242,6 @@
     </div>
 
     <script>
-        let startTime = Date.now();
-        const waitTime = 3 * 60 * 1000;
-
-        function showHint() {
-            document.getElementById('hintText').style.display = 'block';
-            document.getElementById('hintBtn').style.display = 'none';
-        }
-
-        function updateTimer() {
-            const elapsed = Date.now() - startTime;
-            const remaining = waitTime - elapsed;
-
-            if (remaining <= 0) {
-                document.getElementById('hintBtn').style.display = 'inline-block';
-                document.getElementById('timerDisplay').style.display = 'none';
-            } else {
-                const minutes = Math.floor(remaining / 60000);
-                const seconds = Math.floor((remaining % 60000) / 1000);
-                document.getElementById('countdown').textContent =
-                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                setTimeout(updateTimer, 1000);
-            }
-        }
-
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
@@ -320,8 +254,6 @@
                 checkAnswer();
             }
         });
-
-        updateTimer();
     </script>
 </body>
 </html>

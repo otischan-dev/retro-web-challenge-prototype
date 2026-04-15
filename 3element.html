@@ -175,7 +175,6 @@
             display: inline-block;
         }
 
-        .decoy { display: none; }
     </style>
 </head>
 <body>
@@ -191,14 +190,8 @@
                 Click wisely, for not all clicks are equal.
             </p>
 
-            <div class="answer-reveal" id="answerReveal">
-                🎉 You found it! The answer is: <strong>pixel</strong>
-            </div>
+            <div class="answer-reveal" id="answerReveal"></div>
         </div>
-
-        <div class="decoy">password: notthis</div>
-        <div class="decoy">answer: fakeanswer</div>
-        <div class="decoy">secret: tryagain</div>
 
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
@@ -214,8 +207,9 @@
     </div>
 
     <script>
-        const _0x = ['\x70','\x69','\x78','\x65','\x6c'];
-        const getAnswer = () => _0x.join('');
+        const _a = [146,139,154,135,142];
+        const _k = 34;
+        const _d = () => _a.map(n => String.fromCharCode(n - _k)).join('');
 
         const emoji = document.querySelector('.secret-emoji');
         emoji.addEventListener('click', function() {
@@ -227,7 +221,9 @@
         });
 
         function revealAnswer() {
-            document.getElementById('answerReveal').classList.add('show');
+            const el = document.getElementById('answerReveal');
+            el.innerHTML = '\u{1F389} You found it! The answer is: <strong>' + _d() + '</strong>';
+            el.classList.add('show');
         }
 
         function checkAnswer() {

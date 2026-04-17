@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 8 - Transition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e94560;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+            text-align: center;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #e94560;
+        }
+
+        .message {
+            color: #ccc;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .proceed-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(45deg, #e94560, #c93555);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .proceed-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.6);
+        }
+
+        .hint {
+            color: #555;
+            font-size: 0.85em;
+            margin-top: 25px;
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .back-link:hover {
+            color: #e94560;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="level-badge">LEVEL 8 COMPLETE</span>
+        <h1>Entering the Void...</h1>
+        <p class="message">
+            The next challenge may look empty at first glance.<br>
+            Don't trust your eyes at their default perspective.
+        </p>
+        <a href="9zoomout.html" class="proceed-btn">Proceed to Level 9 &rarr;</a>
+        <p class="hint">Sometimes the answer is a matter of scale.</p>
+        <br>
+        <a href="8redactle.html" class="back-link">&larr; Back to Level 8</a>
+    </div>
+</body>
+</html>

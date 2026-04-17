@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 9 - Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #0a0a0f;
+            overflow: auto;
+        }
+        #canvas {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 15px;
+            color: #6a6a6a;
+            margin: 0;
+            padding: 10px;
+            white-space: pre;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <pre id="canvas"></pre>
+    <!-- Hint: Sometimes you need to step back to see the bigger picture. -->
+    <script>
+        (function() {
+            const SCALE_X = 16;
+            const SCALE_Y = 8;
+            const GAP = 3;
+            const PAD = 3;
+
+            const font = {
+                '9': [
+                    [0,1,1,1,0],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [0,1,1,1,1],
+                    [0,0,0,0,1],
+                    [1,0,0,0,1],
+                    [0,1,1,1,0]
+                ],
+                'Z': [
+                    [1,1,1,1,1],
+                    [0,0,0,0,1],
+                    [0,0,0,1,0],
+                    [0,0,1,0,0],
+                    [0,1,0,0,0],
+                    [1,0,0,0,0],
+                    [1,1,1,1,1]
+                ],
+                'O': [
+                    [0,1,1,1,0],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [0,1,1,1,0]
+                ],
+                'M': [
+                    [1,0,0,0,1],
+                    [1,1,0,1,1],
+                    [1,0,1,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1]
+                ],
+                'U': [
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [1,0,0,0,1],
+                    [0,1,1,1,0]
+                ],
+                'T': [
+                    [1,1,1,1,1],
+                    [0,0,1,0,0],
+                    [0,0,1,0,0],
+                    [0,0,1,0,0],
+                    [0,0,1,0,0],
+                    [0,0,1,0,0],
+                    [0,0,1,0,0]
+                ]
+            };
+
+            const message = "9ZOOMOUT";
+            const charW = 5, charH = 7;
+
+            // Total pixel dimensions
+            const totalW = message.length * charW + (message.length - 1) * GAP + 2 * PAD;
+            const totalH = charH + 2 * PAD;
+
+            // Build pixel grid (0 = background, 1 = foreground)
+            const grid = [];
+            for (let y = 0; y < totalH; y++) {
+                grid[y] = new Array(totalW).fill(0);
+            }
+
+            // Place each character
+            let offsetX = PAD;
+            for (let i = 0; i < message.length; i++) {
+                const ch = message[i];
+                const bitmap = font[ch];
+                if (!bitmap) { offsetX += charW + GAP; continue; }
+                for (let row = 0; row < charH; row++) {
+                    for (let col = 0; col < charW; col++) {
+                        grid[PAD + row][offsetX + col] = bitmap[row][col];
+                    }
+                }
+                offsetX += charW + GAP;
+            }
+
+            // Seeded pseudo-random for consistent noise
+            let seed = 7;
+            function rand() {
+                seed = (seed * 16807 + 0) % 2147483647;
+                return (seed - 1) / 2147483646;
+            }
+
+            const bgChars = ['.', '.', '.', '.', '.', '.', ',', '.', ' ', '.'];
+            const fgChars = ['-', '-', '-', '-', '-', '=', '~', '-', '-', '-'];
+
+            // Render scaled grid
+            const lines = [];
+            for (let py = 0; py < totalH; py++) {
+                for (let sy = 0; sy < SCALE_Y; sy++) {
+                    let line = '';
+                    for (let px = 0; px < totalW; px++) {
+                        const on = grid[py][px];
+                        for (let sx = 0; sx < SCALE_X; sx++) {
+                            const r = rand();
+                            const pool = on ? fgChars : bgChars;
+                            line += pool[Math.floor(r * pool.length)];
+                        }
+                    }
+                    lines.push(line);
+                }
+            }
+
+            document.getElementById('canvas').textContent = lines.join('\n');
+        })();
+    </script>
+</body>
+</html>

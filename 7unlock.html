@@ -307,11 +307,10 @@
     </div>
 
     <script>
-        // Gate check: verify code from query param
         (function() {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
-            const _c = [54, 48, 57, 51]; // obfuscated answer
+            const _c = [56, 48, 57, 51]; // obfuscated answer
             const _k = _c.map(n => String.fromCharCode(n)).join('');
             if (code === _k) {
                 document.getElementById('gate').style.display = 'none';

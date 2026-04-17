@@ -62,6 +62,21 @@
             line-height: 1.8;
         }
 
+        .passage {
+            text-align: left;
+            color: #ffffff;
+            font-size: 1.15em;
+            line-height: 2.4;
+            margin: 20px 0;
+            padding: 20px;
+            background: #0a0a15;
+            border-radius: 8px;
+        }
+
+        .h {
+            color: #7eaaff;
+        }
+
         .input-area {
             margin-top: 30px;
         }
@@ -145,51 +160,22 @@
             margin-bottom: 20px;
             display: inline-block;
         }
-
-        .image-container {
-            margin: 20px 0;
-            padding: 20px;
-            background: #0a0a15;
-            border-radius: 10px;
-        }
-
-        .puzzle-image {
-            max-width: 100%;
-            border: 2px solid #00fff5;
-            border-radius: 5px;
-        }
-
-        .filename-hint {
-            color: #666;
-            font-size: 0.8em;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="success-badge">✅ Level 1 Complete!</div>
         <span class="level-badge">LEVEL 2</span>
-        <h1>🔬 Inspect the Inspector</h1>
+        <h1>🖋️ The Invisible Ink</h1>
         
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Every element on a webpage has properties.<br><br>
-                Sometimes the answer is hiding in plain sight,<br>
-                just one <strong>right-click</strong> away.
+                Not all letters are created equal.<br>
+                Some stand out... if you look closely.
             </p>
-            
-            <div class="image-container">
-                <!-- The answer is hidden in the element attributes -->
-                <img 
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100'%3E%3Crect width='200' height='100' fill='%231a1a2e'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300fff5' font-family='monospace'%3E%3F%3F%3F%3F%3F%3F%3F%3C/text%3E%3C/svg%3E" 
-                    alt="The answer is: element"
-                    title="Look at my properties!"
-                    class="puzzle-image"
-                    data-secret="element"
-                    id="mysteryImage"
-                >
-                <p class="filename-hint">mystery.png</p>
+
+            <div class="passage">
+                Th<span class="h">e</span> art of solving puzz<span class="h">l</span>es requir<span class="h">e</span>s patience and a keen <span class="h">m</span>ind. What you s<span class="h">e</span>e at first gla<span class="h">n</span>ce is rarely <span class="h">t</span>he full picture. Look deeper.
             </div>
         </div>
 

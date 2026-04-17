@@ -62,6 +62,26 @@
             line-height: 1.8;
         }
 
+        .poem {
+            text-align: left;
+            color: #ffffff;
+            font-size: 1.15em;
+            line-height: 2.2;
+            margin: 20px 0;
+            padding: 15px;
+            background: #0a0a15;
+            border-radius: 8px;
+            border-left: 3px solid #ffd700;
+        }
+
+        .poem .line {
+            display: block;
+        }
+
+        .poem .first-letter {
+            color: #ffffff;
+        }
+
         .input-area {
             margin-top: 30px;
         }
@@ -137,50 +157,27 @@
             color: #e94560;
         }
 
-        .lang-notice {
-            background: #2a2a4e;
-            border: 1px solid #ffd700;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-        }
-
-        .skip-link {
-            display: inline-block;
-            padding: 8px 20px;
-            background: transparent;
-            border: 1px solid #888;
-            border-radius: 5px;
-            color: #888;
-            font-size: 0.85em;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .skip-link:hover {
-            border-color: #e94560;
-            color: #e94560;
-        }
-
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="lang-notice" style="display: flex; justify-content: center; align-items: center; gap: 15px; padding: 8px;">
-            <p style="margin: 0; font-size: 0.85em; color: #ffd700;">Not a developer?</p>
-            <a href="3element.html" class="skip-link" style="margin: 0; padding: 6px 15px; font-size: 0.85em;">Skip to Level 3</a>
-        </div>
-
         <span class="level-badge">LEVEL 1</span>
-        <h1>🔍 The Hidden Message</h1>
+        <h1>📜 Read Between the Lines</h1>
         
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Every webpage has secrets hidden beneath the surface.<br><br>
-                What you see is not always everything there is.<br><br>
-                To find the answer, you must look at what the <strong>browser doesn't show</strong>.
+                A mysterious verse has been left behind.<br>
+                Can you find the hidden word?
             </p>
+
+            <div class="poem">
+                <span class="line"><span class="first-letter">S</span>ecrets lie beneath the surface of these lines,</span>
+                <span class="line"><span class="first-letter">O</span>ften the answer is right before your eyes.</span>
+                <span class="line"><span class="first-letter">U</span>nseen patterns show themselves to the patient,</span>
+                <span class="line"><span class="first-letter">R</span>eading carefully is the key to moving forward.</span>
+                <span class="line"><span class="first-letter">C</span>an you discover what connects each line?</span>
+                <span class="line"><span class="first-letter">E</span>very journey forward starts at the start.</span>
+            </div>
         </div>
 
         <div class="input-area">
@@ -195,18 +192,6 @@
 
         <a href="index.html" class="back-link">← Back to Instructions</a>
     </div>
-
-    <!-- 
-    ████████████████████████████████████████████████
-    █                                              █
-    █   🎉 Congratulations! You found it!          █
-    █                                              █
-    █   The answer is: source                      █
-    █                                              █
-    █   Next page: 2source.html                    █
-    █                                              █
-    ████████████████████████████████████████████████
-    -->
 
     <script>
         function checkAnswer() {

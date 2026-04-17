@@ -5,304 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level 8 - Web Puzzle Challenge</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; }
         body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #e94560;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 700px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #e94560;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
-            text-align: center;
-        }
-
-        .success-badge {
-            background: #00ff88;
-            color: #1a1a2e;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-
-        .level-badge {
-            display: inline-block;
-            background: #e94560;
-            color: white;
-            padding: 5px 20px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px #e94560;
-        }
-
-        .puzzle-area {
-            background: #1a1a2e;
-            border: 1px solid #00fff5;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 20px 0;
-        }
-
-        .puzzle-text {
-            color: #ffffff;
-            font-size: 1.2em;
-            line-height: 1.8;
-            margin-bottom: 25px;
-        }
-
-        #canvas {
-            font-family: 'Courier New', monospace;
-            font-size: 3px;
-            line-height: 3px;
-            color: #6a6a6a;
-            margin: 20px auto;
-            white-space: pre;
-            letter-spacing: 1px;
-            text-align: left;
+            background: #111;
             overflow: auto;
-            max-height: 400px;
-            background: #0a0a0f;
-            padding: 10px;
-            border-radius: 5px;
         }
-
-        .input-area {
-            margin-top: 30px;
-        }
-
-        .input-area label {
-            display: block;
-            color: #ffd700;
-            margin-bottom: 10px;
-        }
-
-        .url-display {
-            background: #0a0a15;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: monospace;
-            color: #888;
-            margin-bottom: 15px;
-            word-break: break-all;
-        }
-
-        .url-display .editable {
-            color: #00fff5;
-            border-bottom: 2px dashed #00fff5;
-        }
-
-        input[type="text"] {
-            width: 200px;
-            padding: 12px;
-            font-size: 1.1em;
+        pre {
             font-family: 'Courier New', monospace;
-            background: #1a1a2e;
-            border: 2px solid #00fff5;
-            border-radius: 5px;
-            color: #00fff5;
-            text-align: center;
-            outline: none;
-        }
-
-        input[type="text"]:focus {
-            box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
-        }
-
-        .go-btn {
-            display: inline-block;
-            padding: 12px 30px;
-            margin-top: 15px;
-            background: linear-gradient(45deg, #00fff5, #00b8b8);
-            border: none;
-            border-radius: 5px;
-            color: #1a1a2e;
-            font-size: 1em;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .go-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(0, 255, 245, 0.6);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            color: #666;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-
-        .back-link:hover {
-            color: #e94560;
+            font-size: 2px;
+            line-height: 2.2px;
+            letter-spacing: 0.5px;
+            color: #444;
+            padding: 4px;
+            white-space: pre;
+            cursor: default;
+            user-select: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="success-badge">✅ Level 7 Complete!</div>
-        <span class="level-badge">LEVEL 8</span>
-        <h1>🔍 The Hidden Text</h1>
+<pre id="c"></pre>
+<!--
+  Level 8: The page looks blank or noisy.
+  Hint: adjust your perspective. what if you zoom out far enough?
+  The answer is the filename for the next level.
+-->
+<script>
+(function(){
+    // Bitmap font (5 wide x 7 tall each)
+    var F={
+    '9':[[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'Z':[[1,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
+    'O':[[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'M':[[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]]
+    };
+    var msg="9ZOOM", cW=5, cH=7, gap=2, pad=2;
+    var SX=14, SY=10; // scale: chars per bitmap-pixel
 
-        <div class="puzzle-area">
-            <p class="puzzle-text">
-                A mysterious pattern has been detected.<br>
-                It looks like noise... but is it?
-            </p>
-            <pre id="canvas"></pre>
-        </div>
+    // VERTICAL layout: letters stacked top-to-bottom
+    var tW=cW+2*pad;                                   // grid width  = one letter wide + padding
+    var tH=msg.length*cH+(msg.length-1)*gap+2*pad;     // grid height = all letters stacked + gaps + padding
 
-        <!-- Hint: Sometimes you need to step back to see the bigger picture. Try zooming out with Ctrl+minus. -->
+    // Build bitmap grid
+    var g=[];
+    for(var y=0;y<tH;y++) g[y]=new Array(tW).fill(0);
+    var oy=pad;
+    for(var i=0;i<msg.length;i++){
+        var b=F[msg[i]];
+        if(!b){oy+=cH+gap;continue;}
+        for(var r=0;r<cH;r++)for(var c=0;c<cW;c++) g[oy+r][pad+c]=b[r][c];
+        oy+=cH+gap;
+    }
 
-        <div class="input-area">
-            <label>What does the hidden text say? Enter it to proceed:</label>
-            <div class="url-display">
-                https://puzzles.otischan.dev/<span class="editable">?????</span>.html
-            </div>
-            <input type="text" id="answer" placeholder="your answer" autocomplete="off">
-            <br>
-            <button class="go-btn" onclick="checkAnswer()">Go →</button>
-        </div>
+    // Seeded PRNG
+    var s=42;
+    function R(){s=(s*48271)%2147483647;return(s-1)/2147483646;}
 
-        <a href="8redactle.html" class="back-link">← Back to Level 7</a>
-    </div>
+    // Density trick: same char (. and space) at different ratios.
+    // At 2px font everything looks like uniform noise.
+    // Zoom out → foreground blocks become visible as denser regions.
 
-    <script>
-        (function() {
-            const SCALE_X = 16;
-            const SCALE_Y = 8;
-            const GAP = 3;
-            const PAD = 3;
-
-            const font = {
-                '9': [
-                    [0,1,1,1,0],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [0,1,1,1,1],
-                    [0,0,0,0,1],
-                    [1,0,0,0,1],
-                    [0,1,1,1,0]
-                ],
-                'Z': [
-                    [1,1,1,1,1],
-                    [0,0,0,0,1],
-                    [0,0,0,1,0],
-                    [0,0,1,0,0],
-                    [0,1,0,0,0],
-                    [1,0,0,0,0],
-                    [1,1,1,1,1]
-                ],
-                'O': [
-                    [0,1,1,1,0],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [0,1,1,1,0]
-                ],
-                'M': [
-                    [1,0,0,0,1],
-                    [1,1,0,1,1],
-                    [1,0,1,0,1],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1],
-                    [1,0,0,0,1]
-                ]
-            };
-
-            const message = "9ZOOM";
-            const charW = 5, charH = 7;
-
-            const totalW = message.length * charW + (message.length - 1) * GAP + 2 * PAD;
-            const totalH = charH + 2 * PAD;
-
-            const grid = [];
-            for (let y = 0; y < totalH; y++) {
-                grid[y] = new Array(totalW).fill(0);
-            }
-
-            let offsetX = PAD;
-            for (let i = 0; i < message.length; i++) {
-                const ch = message[i];
-                const bitmap = font[ch];
-                if (!bitmap) { offsetX += charW + GAP; continue; }
-                for (let row = 0; row < charH; row++) {
-                    for (let col = 0; col < charW; col++) {
-                        grid[PAD + row][offsetX + col] = bitmap[row][col];
+    var lines=[];
+    for(var py=0;py<tH;py++){
+        for(var sy=0;sy<SY;sy++){
+            var ln='';
+            for(var px=0;px<tW;px++){
+                var on=g[py][px];
+                for(var sx=0;sx<SX;sx++){
+                    var r=R();
+                    if(on){
+                        ln+=(r<0.85)?'.':' ';
+                    } else {
+                        ln+=(r<0.25)?'.':' ';
                     }
                 }
-                offsetX += charW + GAP;
             }
-
-            let seed = 7;
-            function rand() {
-                seed = (seed * 16807 + 0) % 2147483647;
-                return (seed - 1) / 2147483646;
-            }
-
-            const bgChars = ['.', '.', '.', '.', '.', '.', ',', '.', ' ', '.'];
-            const fgChars = ['-', '-', '-', '-', '-', '=', '~', '-', '-', '-'];
-
-            const lines = [];
-            for (let py = 0; py < totalH; py++) {
-                for (let sy = 0; sy < SCALE_Y; sy++) {
-                    let line = '';
-                    for (let px = 0; px < totalW; px++) {
-                        const on = grid[py][px];
-                        for (let sx = 0; sx < SCALE_X; sx++) {
-                            const r = rand();
-                            const pool = on ? fgChars : bgChars;
-                            line += pool[Math.floor(r * pool.length)];
-                        }
-                    }
-                    lines.push(line);
-                }
-            }
-
-            document.getElementById('canvas').textContent = lines.join('\n');
-        })();
-
-        function checkAnswer() {
-            const answer = document.getElementById('answer').value.trim();
-            if (answer) {
-                window.location.href = answer + '.html';
-            }
+            lines.push(ln);
         }
-
-        document.getElementById('answer').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
-    </script>
+    }
+    document.getElementById('c').textContent=lines.join('\n');
+})();
+</script>
 </body>
 </html>

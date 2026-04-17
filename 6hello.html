@@ -57,12 +57,24 @@
             text-shadow: 0 0 10px #e94560;
         }
 
+        .lock-image {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 0 auto 25px;
+            display: block;
+            border: 2px solid #e94560;
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+        }
+
         .puzzle-area {
             background: #1a1a2e;
             border: 1px solid #00fff5;
             border-radius: 10px;
             padding: 30px;
             margin: 20px 0;
+            text-align: left;
         }
 
         .puzzle-text {
@@ -70,55 +82,55 @@
             font-size: 1.1em;
             line-height: 1.8;
             margin-bottom: 20px;
-            text-align: left;
+            text-align: center;
         }
 
-        .diagram-container {
-            margin: 25px auto;
-            padding: 20px;
+        .clue-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .clue-row {
             background: #0a0a15;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .diagram-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-
-        .given-values {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin: 25px 0;
-        }
-
-        .given-item {
-            background: #0a0a15;
-            padding: 12px 20px;
             border-radius: 8px;
-            border: 1px solid #00fff5;
         }
 
-        .given-item .var {
-            color: #ffd700;
-            font-weight: bold;
-            font-size: 1.2em;
+        .clue-row td {
+            padding: 12px 15px;
         }
 
-        .given-item .val {
+        .clue-row td:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .clue-row td:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .clue-digits {
+            display: flex;
+            gap: 8px;
+        }
+
+        .digit-box {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a2e;
+            border: 2px solid #00fff5;
+            border-radius: 5px;
             color: #00fff5;
-            font-size: 1.2em;
-        }
-
-        .question {
-            color: #ffd700;
             font-size: 1.3em;
             font-weight: bold;
-            margin: 25px 0 10px;
+        }
+
+        .clue-hint {
+            color: #ffd700;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
 
         .input-area {
@@ -146,16 +158,17 @@
             border-bottom: 2px dashed #00fff5;
         }
 
-        .answer-note {
-            color: #888;
-            font-size: 0.85em;
+        .code-input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin-bottom: 15px;
         }
 
-        input[type="text"] {
-            width: 200px;
-            padding: 12px;
-            font-size: 1.1em;
+        .code-digit-input {
+            width: 50px;
+            height: 55px;
+            font-size: 1.5em;
             font-family: 'Courier New', monospace;
             background: #1a1a2e;
             border: 2px solid #00fff5;
@@ -165,8 +178,9 @@
             outline: none;
         }
 
-        input[type="text"]:focus {
+        .code-digit-input:focus {
             box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
+            border-color: #ffd700;
         }
 
         .go-btn {
@@ -207,54 +221,115 @@
     <div class="container">
         <div class="success-badge">✅ Level 5 Complete!</div>
         <span class="level-badge">LEVEL 6</span>
-        <h1>📐 The Diagram</h1>
+        <h1>🔒 Crack the Code</h1>
+
+        <img src="6lock.png" alt="Combination Lock" class="lock-image">
 
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Consider the right-angled triangle shown in the diagram.<br>
-                The segments are labeled <strong style="color: #ffd700;">a</strong>, <strong style="color: #ffd700;">b</strong>, <strong style="color: #ffd700;">c</strong>, and <strong style="color: #ffd700;">d</strong> as indicated.<br>
-                <span style="color: #888; font-size: 0.85em;">* Diagram not drawn to scale</span>
+                Based on the 4 conditions below,<br>
+                infer the correct <strong style="color: #00fff5;">4-digit password</strong>.
             </p>
 
-            <div class="diagram-container">
-                <img src="6diagram.png" alt="Right-angled triangle with segments a, b, c, d">
-            </div>
-
-            <div class="given-values">
-                <div class="given-item"><span class="var">a</span> = <span class="val">14</span></div>
-                <div class="given-item"><span class="var">b</span> = <span class="val">48</span></div>
-                <div class="given-item"><span class="var">c</span> = <span class="val">30</span></div>
-            </div>
-
-            <p class="question">What is the value of d?</p>
+            <table class="clue-table">
+                <tr class="clue-row">
+                    <td>
+                        <div class="clue-digits">
+                            <div class="digit-box">6</div>
+                            <div class="digit-box">0</div>
+                            <div class="digit-box">5</div>
+                            <div class="digit-box">8</div>
+                        </div>
+                    </td>
+                    <td class="clue-hint">Two digits are correct and both are in the <strong style="color: #00ff88;">correct position</strong>.</td>
+                </tr>
+                <tr class="clue-row">
+                    <td>
+                        <div class="clue-digits">
+                            <div class="digit-box">8</div>
+                            <div class="digit-box">6</div>
+                            <div class="digit-box">9</div>
+                            <div class="digit-box">5</div>
+                        </div>
+                    </td>
+                    <td class="clue-hint">Two digits are correct but only <strong style="color: #ffd700;">one</strong> is in the <strong style="color: #00ff88;">correct position</strong>.</td>
+                </tr>
+                <tr class="clue-row">
+                    <td>
+                        <div class="clue-digits">
+                            <div class="digit-box">3</div>
+                            <div class="digit-box">7</div>
+                            <div class="digit-box">0</div>
+                            <div class="digit-box">8</div>
+                        </div>
+                    </td>
+                    <td class="clue-hint">Two digits are correct but <strong style="color: #e94560;">neither</strong> is in the correct position.</td>
+                </tr>
+                <tr class="clue-row">
+                    <td>
+                        <div class="clue-digits">
+                            <div class="digit-box">7</div>
+                            <div class="digit-box">5</div>
+                            <div class="digit-box">8</div>
+                            <div class="digit-box">4</div>
+                        </div>
+                    </td>
+                    <td class="clue-hint"><strong style="color: #e94560;">None</strong> of the digits are correct.</td>
+                </tr>
+            </table>
         </div>
 
         <div class="input-area">
-            <label>Enter the value of d to proceed:</label>
+            <label>Enter the 4-digit code to unlock:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/7<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/7unlock.html?code=<span class="editable">????</span>
             </div>
-            <input type="text" id="answer" placeholder="your answer" autocomplete="off">
-            <br>
-            <button class="go-btn" onclick="checkAnswer()">Go →</button>
+            <div class="code-input-group">
+                <input type="text" class="code-digit-input" id="d1" maxlength="1" inputmode="numeric" autocomplete="off">
+                <input type="text" class="code-digit-input" id="d2" maxlength="1" inputmode="numeric" autocomplete="off">
+                <input type="text" class="code-digit-input" id="d3" maxlength="1" inputmode="numeric" autocomplete="off">
+                <input type="text" class="code-digit-input" id="d4" maxlength="1" inputmode="numeric" autocomplete="off">
+            </div>
+            <button class="go-btn" onclick="checkAnswer()">Unlock →</button>
         </div>
 
         <a href="5morse.html" class="back-link">← Back to Level 5</a>
     </div>
 
     <script>
+        const inputs = [
+            document.getElementById('d1'),
+            document.getElementById('d2'),
+            document.getElementById('d3'),
+            document.getElementById('d4')
+        ];
+
+        // Auto-focus next input on digit entry
+        inputs.forEach((input, idx) => {
+            input.addEventListener('input', () => {
+                input.value = input.value.replace(/[^0-9]/g, '');
+                if (input.value.length === 1 && idx < 3) {
+                    inputs[idx + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value === '' && idx > 0) {
+                    inputs[idx - 1].focus();
+                }
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+        });
+
+        inputs[0].focus();
+
         function checkAnswer() {
-            const answer = document.getElementById('answer').value.toLowerCase().trim();
-            if (answer) {
-                window.location.href = '7' + answer + '.html';
+            const code = inputs.map(i => i.value).join('');
+            if (code.length === 4) {
+                window.location.href = '7unlock.html?code=' + code;
             }
         }
-
-        document.getElementById('answer').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
     </script>
 </body>
 </html>

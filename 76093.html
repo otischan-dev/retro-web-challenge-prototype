@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 8 - Web Puzzle Challenge</title>
+    <title>Level 7 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -67,26 +67,58 @@
 
         .puzzle-text {
             color: #ffffff;
-            font-size: 1.2em;
+            font-size: 1.1em;
             line-height: 1.8;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            text-align: left;
         }
 
-        #canvas {
-            font-family: 'Courier New', monospace;
-            font-size: 2px;
-            line-height: 2.2px;
-            letter-spacing: 0.5px;
-            color: #444;
-            margin: 0 auto;
-            white-space: pre;
-            text-align: left;
-            overflow: auto;
-            max-height: 500px;
-            background: #0a0a0f;
-            padding: 6px;
+        .diagram-container {
+            margin: 25px auto;
+            padding: 20px;
+            background: #0a0a15;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
             border-radius: 5px;
-            user-select: none;
+        }
+
+        .given-values {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .given-item {
+            background: #0a0a15;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #00fff5;
+        }
+
+        .given-item .var {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .given-item .val {
+            color: #00fff5;
+            font-size: 1.2em;
+        }
+
+        .question {
+            color: #ffd700;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 25px 0 10px;
         }
 
         .input-area {
@@ -112,6 +144,12 @@
         .url-display .editable {
             color: #00fff5;
             border-bottom: 2px dashed #00fff5;
+        }
+
+        .answer-note {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 15px;
         }
 
         input[type="text"] {
@@ -167,93 +205,56 @@
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 7 Complete!</div>
-        <span class="level-badge">LEVEL 8</span>
-        <h1>🔍 The Hidden Text</h1>
+        <div class="success-badge">✅ Level 6 Complete!</div>
+        <span class="level-badge">LEVEL 7</span>
+        <h1>📐 The Diagram</h1>
 
         <div class="puzzle-area">
             <p class="puzzle-text">
-                A mysterious pattern has been detected.<br>
-                It looks like noise... but is it?
+                Consider the right-angled triangle shown in the diagram.<br>
+                The segments are labeled <strong style="color: #ffd700;">a</strong>, <strong style="color: #ffd700;">b</strong>, <strong style="color: #ffd700;">c</strong>, and <strong style="color: #ffd700;">d</strong> as indicated.<br>
+                <span style="color: #888; font-size: 0.85em;">* Diagram not drawn to scale</span>
             </p>
-            <!-- Hint: adjust your perspective. what if you zoom out far enough? -->
-            <pre id="canvas"></pre>
+
+            <div class="diagram-container">
+                <img src="6diagram.png" alt="Right-angled triangle with segments a, b, c, d">
+            </div>
+
+            <div class="given-values">
+                <div class="given-item"><span class="var">a</span> = <span class="val">14</span></div>
+                <div class="given-item"><span class="var">b</span> = <span class="val">48</span></div>
+                <div class="given-item"><span class="var">c</span> = <span class="val">30</span></div>
+            </div>
+
+            <p class="question">What is the value of d?</p>
         </div>
 
         <div class="input-area">
-            <label>What does the hidden text say? Enter it to proceed:</label>
+            <label>Enter the value of d to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/8<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="8redactle.html" class="back-link">← Back to Level 7</a>
+        <a href="6hello.html" class="back-link">← Back to Level 6</a>
     </div>
 
     <script>
-    (function(){
-        var F={
-        '9':[[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
-        'Z':[[1,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
-        'O':[[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
-        'M':[[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]]
-        };
-        var msg="9ZOOM", cW=5, cH=7, gap=2, pad=2;
-        var SX=14, SY=10;
-
-        // Vertical layout: letters stacked top-to-bottom
-        var tW=cW+2*pad;
-        var tH=msg.length*cH+(msg.length-1)*gap+2*pad;
-
-        var g=[];
-        for(var y=0;y<tH;y++) g[y]=new Array(tW).fill(0);
-        var oy=pad;
-        for(var i=0;i<msg.length;i++){
-            var b=F[msg[i]];
-            if(!b){oy+=cH+gap;continue;}
-            for(var r=0;r<cH;r++)for(var c=0;c<cW;c++) g[oy+r][pad+c]=b[r][c];
-            oy+=cH+gap;
-        }
-
-        var s=42;
-        function R(){s=(s*48271)%2147483647;return(s-1)/2147483646;}
-
-        var lines=[];
-        for(var py=0;py<tH;py++){
-            for(var sy=0;sy<SY;sy++){
-                var ln='';
-                for(var px=0;px<tW;px++){
-                    var on=g[py][px];
-                    for(var sx=0;sx<SX;sx++){
-                        var r=R();
-                        if(on){
-                            ln+=(r<0.85)?'.':' ';
-                        } else {
-                            ln+=(r<0.25)?'.':' ';
-                        }
-                    }
-                }
-                lines.push(ln);
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value.toLowerCase().trim();
+            if (answer) {
+                window.location.href = '8' + answer + '.html';
             }
         }
-        document.getElementById('canvas').textContent=lines.join('\n');
-    })();
 
-    function checkAnswer() {
-        var answer = document.getElementById('answer').value.trim();
-        if (answer) {
-            window.location.href = answer + '.html';
-        }
-    }
-
-    document.getElementById('answer').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            checkAnswer();
-        }
-    });
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
     </script>
 </body>
 </html>

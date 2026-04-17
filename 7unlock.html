@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 7 - Web Puzzle Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e94560;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+            text-align: center;
+        }
+
+        .success-badge {
+            background: #00ff88;
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #e94560;
+        }
+
+        .puzzle-area {
+            background: #1a1a2e;
+            border: 1px solid #00fff5;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .puzzle-text {
+            color: #ffffff;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .diagram-container {
+            margin: 25px auto;
+            padding: 20px;
+            background: #0a0a15;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .given-values {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .given-item {
+            background: #0a0a15;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #00fff5;
+        }
+
+        .given-item .var {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .given-item .val {
+            color: #00fff5;
+            font-size: 1.2em;
+        }
+
+        .question {
+            color: #ffd700;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 25px 0 10px;
+        }
+
+        .input-area {
+            margin-top: 30px;
+        }
+
+        .input-area label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .url-display {
+            background: #0a0a15;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #888;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .url-display .editable {
+            color: #00fff5;
+            border-bottom: 2px dashed #00fff5;
+        }
+
+        .answer-note {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 12px;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            border: 2px solid #00fff5;
+            border-radius: 5px;
+            color: #00fff5;
+            text-align: center;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
+        }
+
+        .go-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin-top: 15px;
+            background: linear-gradient(45deg, #00fff5, #00b8b8);
+            border: none;
+            border-radius: 5px;
+            color: #1a1a2e;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .go-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 245, 0.6);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .back-link:hover {
+            color: #e94560;
+        }
+
+        /* Gate overlay for incorrect code */
+        .gate-overlay {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .gate-overlay .lock-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .gate-overlay .gate-message {
+            color: #e94560;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .gate-overlay .gate-hint {
+            color: #888;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .gate-overlay .retry-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin-top: 25px;
+            background: linear-gradient(45deg, #e94560, #c93555);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .gate-overlay .retry-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.6);
+        }
+
+        .puzzle-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Gate: shown when code is wrong -->
+        <div class="gate-overlay" id="gate">
+            <div class="lock-icon">🔒</div>
+            <p class="gate-message">Incorrect Code</p>
+            <p class="gate-hint">
+                The combination lock rejected your code.<br>
+                Go back and crack the code to unlock this level.
+            </p>
+            <a href="6hello.html" class="retry-btn">← Try Again</a>
+        </div>
+
+        <!-- Puzzle: shown when code is correct -->
+        <div class="puzzle-content" id="puzzleContent">
+        <div class="success-badge">✅ Level 6 Complete!</div>
+        <span class="level-badge">LEVEL 7</span>
+        <h1>📐 The Diagram</h1>
+
+        <div class="puzzle-area">
+            <p class="puzzle-text">
+                Consider the right-angled triangle shown in the diagram.<br>
+                The segments are labeled <strong style="color: #ffd700;">a</strong>, <strong style="color: #ffd700;">b</strong>, <strong style="color: #ffd700;">c</strong>, and <strong style="color: #ffd700;">d</strong> as indicated.<br>
+                <span style="color: #888; font-size: 0.85em;">* Diagram not drawn to scale</span>
+            </p>
+
+            <div class="diagram-container">
+                <img src="7diagram.png" alt="Right-angled triangle with segments a, b, c, d">
+            </div>
+
+            <div class="given-values">
+                <div class="given-item"><span class="var">a</span> = <span class="val">14</span></div>
+                <div class="given-item"><span class="var">b</span> = <span class="val">48</span></div>
+                <div class="given-item"><span class="var">c</span> = <span class="val">30</span></div>
+            </div>
+
+            <p class="question">What is the value of d?</p>
+        </div>
+
+        <div class="input-area">
+            <label>Enter the value of d to proceed:</label>
+            <div class="url-display">
+                https://puzzles.otischan.dev/8<span class="editable">?????</span>.html
+            </div>
+            <input type="text" id="answer" placeholder="your answer" autocomplete="off">
+            <br>
+            <button class="go-btn" onclick="checkAnswer()">Go →</button>
+        </div>
+
+        <a href="6hello.html" class="back-link">← Back to Level 6</a>
+        </div><!-- end puzzle-content -->
+    </div>
+
+    <script>
+        // Gate check: verify code from query param
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            const _c = [54, 48, 57, 51]; // obfuscated answer
+            const _k = _c.map(n => String.fromCharCode(n)).join('');
+            if (code === _k) {
+                document.getElementById('gate').style.display = 'none';
+                document.getElementById('puzzleContent').style.display = 'block';
+            }
+        })();
+
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value.toLowerCase().trim();
+            if (answer) {
+                window.location.href = '8' + answer + '.html';
+            }
+        }
+
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    </script>
+</body>
+</html>

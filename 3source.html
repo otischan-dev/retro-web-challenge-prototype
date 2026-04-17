@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 2 - Web Puzzle Challenge</title>
+    <title>Level 3 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -30,6 +30,7 @@
             padding: 40px;
             box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
             text-align: center;
+            position: relative;
         }
 
         .level-badge {
@@ -54,6 +55,7 @@
             border-radius: 10px;
             padding: 30px;
             margin: 20px 0;
+            position: relative;
         }
 
         .puzzle-text {
@@ -62,19 +64,31 @@
             line-height: 1.8;
         }
 
-        .passage {
-            text-align: left;
-            color: #ffffff;
-            font-size: 1.15em;
-            line-height: 2.4;
-            margin: 20px 0;
-            padding: 20px;
-            background: #0a0a15;
-            border-radius: 8px;
+        .secret-emoji {
+            cursor: default;
+            user-select: none;
         }
 
-        .h {
-            color: #7eaaff;
+        .answer-reveal {
+            display: none;
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #1a1a2e;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .answer-reveal.show {
+            display: block;
         }
 
         .input-area {
@@ -160,43 +174,62 @@
             margin-bottom: 20px;
             display: inline-block;
         }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="success-badge">✅ Level 1 Complete!</div>
-        <span class="level-badge">LEVEL 2</span>
-        <h1>🖋️ The Invisible Ink</h1>
+        <div class="success-badge">✅ Level 2 Complete!</div>
+        <span class="level-badge">LEVEL 3</span>
+        <h1><span class="secret-emoji" data-clicks="0">🎯</span> The Hidden Touch</h1>
         
         <div class="puzzle-area">
             <p class="puzzle-text">
-                Not all letters are created equal.<br>
-                Some stand out... if you look closely.
+                Some secrets require more than just looking.<br><br>
+                They require <strong>interaction</strong>.<br><br>
+                Click wisely, for not all clicks are equal.
             </p>
 
-            <div class="passage">
-                Th<span class="h">e</span> art of solving puzz<span class="h">l</span>es requir<span class="h">e</span>s patience and a keen <span class="h">m</span>ind. What you s<span class="h">e</span>e at first gla<span class="h">n</span>ce is rarely <span class="h">t</span>he full picture. Look deeper.
-            </div>
+            <div class="answer-reveal" id="answerReveal"></div>
         </div>
 
         <div class="input-area">
             <label>Enter the answer to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/3<span class="editable">???????</span>.html
+                https://puzzles.otischan.dev/4<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="1begin.html" class="back-link">← Back to Level 1</a>
+        <a href="2element.html" class="back-link">← Back to Level 2</a>
     </div>
 
     <script>
+        const _a = [146,139,154,135,142];
+        const _k = 34;
+        const _d = () => _a.map(n => String.fromCharCode(n - _k)).join('');
+
+        const emoji = document.querySelector('.secret-emoji');
+        emoji.addEventListener('click', function() {
+            let clicks = parseInt(this.dataset.clicks) + 1;
+            this.dataset.clicks = clicks;
+            if (clicks >= 3) {
+                revealAnswer();
+            }
+        });
+
+        function revealAnswer() {
+            const el = document.getElementById('answerReveal');
+            el.innerHTML = '\u{1F389} You found it! The answer is: <strong>' + _d() + '</strong>';
+            el.classList.add('show');
+        }
+
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '3' + answer + '.html';
+                window.location.href = '4' + answer + '.html';
             }
         }
 

@@ -415,37 +415,7 @@
             }
         });
 
-        // Detect DevTools open via console getter trick
-        (function() {
-            let warningShown = false;
-            const detector = new Image();
-            Object.defineProperty(detector, 'id', {
-                get: function() {
-                    if (!warningShown) {
-                        warningShown = true;
-                        const toast = document.createElement('div');
-                        toast.style.cssText = [
-                            'position:fixed', 'top:24px', 'left:50%',
-                            'transform:translateX(-50%)',
-                            'background:rgba(30,30,30,0.92)', 'color:#fff',
-                            'padding:12px 28px', 'border-radius:10px',
-                            'font-size:1em', 'z-index:99999',
-                            'font-family:monospace', 'box-shadow:0 4px 16px rgba(0,0,0,0.3)',
-                            'pointer-events:none'
-                        ].join(';');
-                        toast.textContent = '🙈 Hey, no cheating~';
-                        document.body.appendChild(toast);
-                        setTimeout(function() {
-                            toast.remove();
-                            warningShown = false;
-                        }, 3000);
-                    }
-                }
-            });
-            setInterval(function() {
-                console.log('%c ', detector);
-            }, 1500);
-        })();
+
     </script>
 </body>
 </html>

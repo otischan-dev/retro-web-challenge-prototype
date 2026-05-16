@@ -398,6 +398,38 @@
 
         // Initial render
         renderArticle();
+
+        // --- DevTools deterrents (non-technical blocker) ---
+        // Disable right-click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
+            ) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        // Detect DevTools open via window size gap and warn/redirect
+        (function() {
+            const threshold = 160;
+            let warned = false;
+            setInterval(function() {
+                if (
+                    (window.outerWidth - window.innerWidth > threshold ||
+                     window.outerHeight - window.innerHeight > threshold) &&
+                    !warned
+                ) {
+                    warned = true;
+                    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:2em;font-family:monospace;">🚫 Access Denied</div>';
+                }
+            }, 1000);
+        })();
     </script>
 </body>
 </html>

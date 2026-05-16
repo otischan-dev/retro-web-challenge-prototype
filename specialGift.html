@@ -415,20 +415,36 @@
             }
         });
 
-        // Detect DevTools open via window size gap and warn/redirect
+        // Detect DevTools open via console getter trick
         (function() {
-            const threshold = 160;
-            let warned = false;
-            setInterval(function() {
-                if (
-                    (window.outerWidth - window.innerWidth > threshold ||
-                     window.outerHeight - window.innerHeight > threshold) &&
-                    !warned
-                ) {
-                    warned = true;
-                    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:2em;font-family:monospace;">🚫 Access Denied</div>';
+            let warningShown = false;
+            const detector = new Image();
+            Object.defineProperty(detector, 'id', {
+                get: function() {
+                    if (!warningShown) {
+                        warningShown = true;
+                        const toast = document.createElement('div');
+                        toast.style.cssText = [
+                            'position:fixed', 'top:24px', 'left:50%',
+                            'transform:translateX(-50%)',
+                            'background:rgba(30,30,30,0.92)', 'color:#fff',
+                            'padding:12px 28px', 'border-radius:10px',
+                            'font-size:1em', 'z-index:99999',
+                            'font-family:monospace', 'box-shadow:0 4px 16px rgba(0,0,0,0.3)',
+                            'pointer-events:none'
+                        ].join(';');
+                        toast.textContent = '🙈 Hey, no cheating~';
+                        document.body.appendChild(toast);
+                        setTimeout(function() {
+                            toast.remove();
+                            warningShown = false;
+                        }, 3000);
+                    }
                 }
-            }, 1000);
+            });
+            setInterval(function() {
+                console.log('%c ', detector);
+            }, 1500);
         })();
     </script>
 </body>

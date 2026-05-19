@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 7 - Web Puzzle Challenge</title>
+    <title>Level 8 - Web Puzzle Challenge</title>
     <style>
         * {
             margin: 0;
@@ -263,13 +263,13 @@
                 The combination lock rejected your code.<br>
                 Go back and crack the code to unlock this level.
             </p>
-            <a href="6hello.html" class="retry-btn">← Try Again</a>
+            <a href="7braille.html" class="retry-btn">← Try Again</a>
         </div>
 
         <!-- Puzzle: shown when code is correct -->
         <div class="puzzle-content" id="puzzleContent">
-        <div class="success-badge">✅ Level 6 Complete!</div>
-        <span class="level-badge">LEVEL 7</span>
+        <div class="success-badge">✅ Level 7 Complete!</div>
+        <span class="level-badge">LEVEL 8</span>
         <h1>📐 The Diagram</h1>
 
         <div class="puzzle-area">
@@ -280,7 +280,7 @@
             </p>
 
             <div class="diagram-container">
-                <img src="7diagram.png" alt="Right-angled triangle with segments a, b, c, d">
+                <img src="8diagram.png" alt="Right-angled triangle with segments a, b, c, d">
             </div>
 
             <div class="given-values">
@@ -295,14 +295,14 @@
         <div class="input-area">
             <label>Enter the value of d to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/8<span class="editable">?????</span>.html
+                https://puzzles.otischan.dev/9<span class="editable">?????</span>.html
             </div>
             <input type="text" id="answer" placeholder="your answer" autocomplete="off">
             <br>
             <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
-        <a href="6hello.html" class="back-link">← Back to Level 6</a>
+        <a href="7braille.html" class="back-link">← Back to Level 7</a>
         </div><!-- end puzzle-content -->
     </div>
 
@@ -321,7 +321,7 @@
         function checkAnswer() {
             const answer = document.getElementById('answer').value.toLowerCase().trim();
             if (answer) {
-                window.location.href = '8' + answer + '.html';
+                window.location.href = '9' + answer + '.html';
             }
         }
 

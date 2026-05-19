@@ -57,80 +57,81 @@
             text-shadow: 0 0 10px #e94560;
         }
 
-        .lock-image {
-            max-width: 320px;
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 0 auto 25px;
-            display: block;
-            border: 2px solid #e94560;
-            box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
-        }
-
         .puzzle-area {
             background: #1a1a2e;
             border: 1px solid #00fff5;
             border-radius: 10px;
             padding: 30px;
             margin: 20px 0;
-            text-align: left;
         }
 
-        .puzzle-text {
-            color: #ffffff;
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .clue-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-        }
-
-        .clue-row {
-            background: #0a0a15;
-            border-radius: 8px;
-        }
-
-        .clue-row td {
-            padding: 12px 15px;
-        }
-
-        .clue-row td:first-child {
-            border-radius: 8px 0 0 8px;
-        }
-
-        .clue-row td:last-child {
-            border-radius: 0 8px 8px 0;
-        }
-
-        .clue-digits {
+        .braille-grid {
             display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .braille-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 8px;
         }
 
-        .digit-box {
-            width: 38px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a2e;
-            border: 2px solid #00fff5;
-            border-radius: 5px;
-            color: #00fff5;
-            font-size: 1.3em;
-            font-weight: bold;
+        .braille-cell .label {
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 5px;
         }
 
-        .clue-hint {
-            color: #ffd700;
-            font-size: 0.95em;
-            line-height: 1.5;
+        .braille-char {
+            display: grid;
+            grid-template-columns: repeat(2, 24px);
+            grid-template-rows: repeat(3, 24px);
+            gap: 6px;
+            padding: 10px;
+            background: #0a0a15;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .dot.raised {
+            background: #00fff5;
+            box-shadow: 0 0 10px rgba(0, 255, 245, 0.6);
+        }
+
+        .dot.flat {
+            background: #1a1a2e;
+            border: 1px solid #333;
+        }
+
+        .braille-cell:nth-child(1) .dot.raised { animation: glow 2.5s ease-in-out infinite; }
+        .braille-cell:nth-child(3) .dot.raised { animation: glow 2.5s ease-in-out infinite 0.3s; }
+        .braille-cell:nth-child(5) .dot.raised { animation: glow 2.5s ease-in-out infinite 0.6s; }
+        .braille-cell:nth-child(7) .dot.raised { animation: glow 2.5s ease-in-out infinite 0.9s; }
+        .braille-cell:nth-child(9) .dot.raised { animation: glow 2.5s ease-in-out infinite 1.2s; }
+        .braille-cell:nth-child(11) .dot.raised { animation: glow 2.5s ease-in-out infinite 1.5s; }
+        .braille-cell:nth-child(13) .dot.raised { animation: glow 2.5s ease-in-out infinite 1.8s; }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 245, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 245, 0.9), 0 0 30px rgba(0, 255, 245, 0.4); }
+        }
+
+        .braille-sep {
+            width: 1px;
+            height: 90px;
+            background: #333;
+            align-self: center;
         }
 
         .input-area {
@@ -158,17 +159,10 @@
             border-bottom: 2px dashed #00fff5;
         }
 
-        .code-input-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .code-digit-input {
-            width: 50px;
-            height: 55px;
-            font-size: 1.5em;
+        input[type="text"] {
+            width: 200px;
+            padding: 12px;
+            font-size: 1.1em;
             font-family: 'Courier New', monospace;
             background: #1a1a2e;
             border: 2px solid #00fff5;
@@ -178,9 +172,8 @@
             outline: none;
         }
 
-        .code-digit-input:focus {
+        input[type="text"]:focus {
             box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
-            border-color: #ffd700;
         }
 
         .go-btn {
@@ -215,121 +208,103 @@
         .back-link:hover {
             color: #e94560;
         }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="success-badge">✅ Level 5 Complete!</div>
         <span class="level-badge">LEVEL 6</span>
-        <h1>🔒 Crack the Code</h1>
-
-        <img src="6lock.png" alt="Combination Lock" class="lock-image">
-
+        <h1>⠃ The Dots</h1>
+        
         <div class="puzzle-area">
-            <p class="puzzle-text">
-                Based on the 4 conditions below,<br>
-                infer the correct <strong style="color: #00fff5;">4-digit password</strong>.
-            </p>
-
-            <table class="clue-table">
-                <tr class="clue-row">
-                    <td>
-                        <div class="clue-digits">
-                            <div class="digit-box">8</div>
-                            <div class="digit-box">0</div>
-                            <div class="digit-box">4</div>
-                            <div class="digit-box">6</div>
-                        </div>
-                    </td>
-                    <td class="clue-hint">Two digits are correct and both are in the <strong style="color: #00ff88;">correct position</strong>.</td>
-                </tr>
-                <tr class="clue-row">
-                    <td>
-                        <div class="clue-digits">
-                            <div class="digit-box">6</div>
-                            <div class="digit-box">3</div>
-                            <div class="digit-box">9</div>
-                            <div class="digit-box">1</div>
-                        </div>
-                    </td>
-                    <td class="clue-hint">Two digits are correct but only <strong style="color: #ffd700;">one</strong> is in the <strong style="color: #00ff88;">correct position</strong>.</td>
-                </tr>
-                <tr class="clue-row">
-                    <td>
-                        <div class="clue-digits">
-                            <div class="digit-box">3</div>
-                            <div class="digit-box">7</div>
-                            <div class="digit-box">0</div>
-                            <div class="digit-box">2</div>
-                        </div>
-                    </td>
-                    <td class="clue-hint">Two digits are correct but <strong style="color: #e94560;">neither</strong> is in the correct position.</td>
-                </tr>
-                <tr class="clue-row">
-                    <td>
-                        <div class="clue-digits">
-                            <div class="digit-box">1</div>
-                            <div class="digit-box">2</div>
-                            <div class="digit-box">5</div>
-                            <div class="digit-box">7</div>
-                        </div>
-                    </td>
-                    <td class="clue-hint"><strong style="color: #e94560;">None</strong> of the digits are correct.</td>
-                </tr>
-            </table>
+            <div class="braille-grid" id="brailleGrid"></div>
         </div>
 
         <div class="input-area">
-            <label>Enter the 4-digit code to unlock:</label>
+            <label>Enter the decoded word to proceed:</label>
             <div class="url-display">
-                https://puzzles.otischan.dev/7unlock.html?code=<span class="editable">????</span>
+                https://puzzles.otischan.dev/7<span class="editable">???????</span>.html
             </div>
-            <div class="code-input-group">
-                <input type="text" class="code-digit-input" id="d1" maxlength="1" inputmode="numeric" autocomplete="off">
-                <input type="text" class="code-digit-input" id="d2" maxlength="1" inputmode="numeric" autocomplete="off">
-                <input type="text" class="code-digit-input" id="d3" maxlength="1" inputmode="numeric" autocomplete="off">
-                <input type="text" class="code-digit-input" id="d4" maxlength="1" inputmode="numeric" autocomplete="off">
-            </div>
-            <button class="go-btn" onclick="checkAnswer()">Unlock →</button>
+            <input type="text" id="answer" placeholder="your answer" autocomplete="off">
+            <br>
+            <button class="go-btn" onclick="checkAnswer()">Go →</button>
         </div>
 
         <a href="5morse.html" class="back-link">← Back to Level 5</a>
     </div>
 
     <script>
-        const inputs = [
-            document.getElementById('d1'),
-            document.getElementById('d2'),
-            document.getElementById('d3'),
-            document.getElementById('d4')
+        // Braille dot positions (2 columns x 3 rows):
+        // Position numbering: 1=top-left, 2=mid-left, 3=bot-left, 4=top-right, 5=mid-right, 6=bot-right
+        // B = dots 1,2       -> ⠃
+        // R = dots 1,2,3,5   -> ⠗
+        // A = dots 1         -> ⠁
+        // I = dots 2,4       -> ⠊
+        // L = dots 1,2,3     -> ⠇
+        // L = dots 1,2,3     -> ⠇
+        // E = dots 1,5       -> ⠑
+        const brailleWord = [
+            [1,1,0,0,0,0], // B: dots 1,2
+            [1,1,1,0,1,0], // R: dots 1,2,3,5
+            [1,0,0,0,0,0], // A: dot 1
+            [0,1,0,1,0,0], // I: dots 2,4
+            [1,1,1,0,0,0], // L: dots 1,2,3
+            [1,1,1,0,0,0], // L: dots 1,2,3
+            [1,0,0,0,1,0]  // E: dots 1,5
         ];
 
-        // Auto-focus next input on digit entry
-        inputs.forEach((input, idx) => {
-            input.addEventListener('input', () => {
-                input.value = input.value.replace(/[^0-9]/g, '');
-                if (input.value.length === 1 && idx < 3) {
-                    inputs[idx + 1].focus();
+        function createBrailleGrid() {
+            const grid = document.getElementById('brailleGrid');
+            brailleWord.forEach((dots, idx) => {
+                if (idx > 0) {
+                    const sep = document.createElement('div');
+                    sep.className = 'braille-sep';
+                    grid.appendChild(sep);
                 }
-            });
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && input.value === '' && idx > 0) {
-                    inputs[idx - 1].focus();
-                }
-                if (e.key === 'Enter') {
-                    checkAnswer();
-                }
-            });
-        });
 
-        inputs[0].focus();
+                const cell = document.createElement('div');
+                cell.className = 'braille-cell';
+
+                const label = document.createElement('span');
+                label.className = 'label';
+                label.textContent = (idx + 1);
+                cell.appendChild(label);
+
+                const charGrid = document.createElement('div');
+                charGrid.className = 'braille-char';
+
+                // Braille grid layout: columns first (top-left, mid-left, bot-left, top-right, mid-right, bot-right)
+                // CSS grid is row-major, so map to:
+                // Row 0: pos 0 (top-left), pos 3 (top-right)
+                // Row 1: pos 1 (mid-left), pos 4 (mid-right)
+                // Row 2: pos 2 (bot-left), pos 5 (bot-right)
+                const order = [0, 3, 1, 4, 2, 5];
+                order.forEach(pos => {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot ' + (dots[pos] ? 'raised' : 'flat');
+                    charGrid.appendChild(dot);
+                });
+
+                cell.appendChild(charGrid);
+                grid.appendChild(cell);
+            });
+        }
 
         function checkAnswer() {
-            const code = inputs.map(i => i.value).join('');
-            if (code.length === 4) {
-                window.location.href = '7unlock.html?code=' + code;
+            const answer = document.getElementById('answer').value.toLowerCase().trim();
+            if (answer) {
+                window.location.href = '7' + answer + '.html';
             }
         }
+
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        createBrailleGrid();
     </script>
 </body>
 </html>

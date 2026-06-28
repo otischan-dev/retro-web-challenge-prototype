@@ -433,7 +433,7 @@
     <span class="sub">CRIMSON ROOM · 祖師爺致敬版</span>
     <div id="btnNav">
       <button class="navBtn active" data-view="room">房間</button>
-      <button class="navBtn" data-view="safe" id="navSafe">保險箱</button>
+      <button class="navBtn" data-view="safe" id="navSafe" style="display:none">保險箱</button>
       <button class="navBtn" data-help="1">說明</button>
     </div>
   </div>
@@ -538,7 +538,7 @@
       物品會收入下方物品欄，可互相組合使用。
     </div>
     <button id="startBtn">開始</button>
-    <div class="credit">致敬 Toshimitsu Takagi「深紅の部屋」(2004) · 此為隔離重製，與其他檔案無關</div>
+    <div class="credit">致敬 Toshimitsu Takagi「深紅の部屋」(2004)</div>
   </div>
 
   <!-- win overlay -->
@@ -567,7 +567,7 @@ const el = (t, p={}, r=document.body) => {
 
 // ---------- message toast ----------
 let msgTimer=null;
-function msg(text, ms=2200){
+function msg(text, ms=4500){
   const m = $("#msg");
   m.textContent = text;
   m.classList.add("show");
@@ -873,7 +873,7 @@ function startDancer(){
   let beat = 0;
   dancerStep = 0;
   clearInterval(dancerTimer);
-  msg("電視亮起 —— 一個人在跳舞……並閃出一串數字！", 3000);
+  msg("電視亮起 —— 一個人在跳舞……並閃出一串數字！", 5500);
 
   dancerTimer = setInterval(()=>{
     const d = $("#dancer");
@@ -894,7 +894,7 @@ function startDancer(){
       STATE.flags.dancerWatched = true;
       // reveal the safe on back wall (replace painting location concept)
       revealSafe();
-      msg("畫面熄滅。地板…不，是後牆傳來「卡」的一聲，牆板鬆了一塊！", 4000);
+      msg("畫面熄滅。地板…不，是後牆傳來「卡」的一聲，牆板鬆了一塊！", 6000);
       setTimeout(()=> setView("room"), 1200);
     }
   }, 520);

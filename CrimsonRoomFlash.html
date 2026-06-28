@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>深紅房間 · Crimson Room (Flash Tribute)</title>
+<!--
+  A self-contained, isolated tribute to Toshimitsu Takagi's 2004 Flash classic
+  "Crimson Room" (深紅房間 — the "grandmaster" of escape-room games).
+  No external assets, no edits to other files. Pure HTML/CSS/JS in one file.
+-->
+<style>
+  :root{
+    --crimson:#7a0f14;
+    --crimson-deep:#4c0509;
+    --crimson-light:#b2202a;
+    --gold:#e7c25a;
+    --gold-deep:#b8902a;
+    --paper:#f3e3c3;
+    --ink:#2a1c10;
+    --shadow: rgba(0,0,0,.55);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; }
+  body{
+    font-family:"Trebuchet MS","Segoe UI",Tahoma,sans-serif;
+    background:#0a0606 radial-gradient(circle at 50% 25%, #2a0c0c 0%, #0a0606 70%);
+    color:var(--paper);
+    overflow:hidden;
+    user-select:none;
+  }
+
+  /* ---------- Stage layout ---------- */
+  #app{ position:relative; width:100%; height:100%; display:flex; flex-direction:column; }
+
+  /* ---------- Top bar ---------- */
+  #topbar{
+    display:flex; align-items:center; gap:16px;
+    padding:8px 16px;
+    background:linear-gradient(#1a0708, #100404);
+    border-bottom:2px solid var(--gold-deep);
+    box-shadow:0 4px 16px var(--shadow);
+    z-index:30;
+  }
+  #topbar .title{
+    font-size:18px; letter-spacing:2px; color:var(--gold);
+    text-shadow:0 0 8px rgba(231,194,90,.5);
+  }
+  #topbar .sub{ font-size:11px; opacity:.7; margin-left:4px; }
+  #btnNav{ margin-left:auto; display:flex; gap:6px; }
+  .navBtn{
+    background:#2a0c0c; color:var(--paper);
+    border:1px solid var(--gold-deep); border-radius:4px;
+    padding:6px 10px; cursor:pointer; font-size:12px;
+    transition:all .15s;
+  }
+  .navBtn:hover{ background:var(--crimson-light); color:#fff; }
+  .navBtn.active{ background:var(--crimson); color:var(--gold); box-shadow:inset 0 0 8px #000; }
+
+  /* ---------- Scene viewport ---------- */
+  #stage{
+    position:relative; flex:1; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background:#000;
+  }
+  #scene{
+    position:relative;
+    width:min(96vw, 1100px);
+    aspect-ratio: 16/10;
+    max-height: 86vh;
+    border:3px solid var(--gold-deep);
+    border-radius:6px;
+    box-shadow:0 0 40px rgba(0,0,0,.8), inset 0 0 60px rgba(0,0,0,.6);
+    overflow:hidden;
+  }
+  .view{ position:absolute; inset:0; display:none; }
+  .view.active{ display:block; }
+  .view.active.closeup{ display:flex; }
+
+  /* cursor for hotspots */
+  .hot{ position:absolute; cursor:pointer; }
+  .hot:hover{ outline:2px dashed var(--gold); outline-offset:-6px; filter:brightness(1.18); }
+
+  /* ============ VIEW: ROOM (main) ============ */
+  #view-room{
+    background:
+      radial-gradient(ellipse at 50% 35%, #c5303a 0%, var(--crimson-light) 35%, var(--crimson) 60%, var(--crimson-deep) 100%);
+  }
+  /* back wall panel */
+  #view-room::before{
+    content:""; position:absolute; inset:6% 8% 0 8%;
+    border:2px solid rgba(255,255,255,.06);
+    box-shadow: inset 0 0 50px rgba(0,0,0,.4);
+    pointer-events:none;
+  }
+  /* floor */
+  #view-room::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:30%;
+    background:linear-gradient(#3c0a0e, #1c0406);
+    transform-origin:top; transform:perspective(420px) rotateX(55deg);
+    box-shadow: inset 0 10px 30px rgba(0,0,0,.6);
+  }
+
+  /* Painting on the back wall */
+  #painting{
+    top:10%; left:40%; width:20%; height:24%;
+    background:
+      linear-gradient(135deg, #d8b24a 0%, #a87a22 100%);
+    border:6px solid #5a3a10;
+    box-shadow:0 6px 20px var(--shadow);
+    border-radius:2px;
+  }
+  #painting .face{
+    position:absolute; inset:14%;
+    background:radial-gradient(circle at 50% 40%, #ffe8c0 0 40%, #c98a4a 70%);
+    border-radius:50% 50% 45% 45%;
+  }
+  /* CD player on the little shelf */
+  #shelf{
+    position:absolute; top:36%; left:34%; width:34%; height:8%;
+    background:linear-gradient(#1a1a1a,#000);
+    border-top:3px solid #333;
+    border-radius:3px;
+    box-shadow:0 6px 14px var(--shadow);
+  }
+  #cdplayer{
+    bottom:46%; left:40%; width:18%; height:10%;
+    background:linear-gradient(#2a2a2a,#0c0c0c);
+    border:2px solid #444; border-radius:5px;
+    box-shadow:inset 0 0 8px #000, 0 4px 10px var(--shadow);
+  }
+  #cdplayer::before{ /* tray */
+    content:""; position:absolute; top:30%; left:14%; right:14%; height:40%;
+    background:#111; border-radius:3px; box-shadow:inset 0 0 6px #000;
+  }
+  #cdplayer::after{ /* green light */
+    content:""; position:absolute; bottom:14%; left:46%; width:8%; height:8%;
+    background:#7CFC55; border-radius:50%; box-shadow:0 0 6px #7CFC55;
+  }
+
+  /* Bed */
+  #bed{
+    bottom:6%; right:6%; width:34%; height:34%;
+  }
+  #bed .frame{
+    position:absolute; inset:30% 0 0 0;
+    background:linear-gradient(#5a2a12,#3a1408);
+    border-radius:6px 6px 0 0;
+    box-shadow:0 6px 16px var(--shadow);
+  }
+  #bed .mattress{
+    position:absolute; top:18%; left:4%; right:18%; height:26%;
+    background:linear-gradient(#f0d8b0,#d4b888);
+    border-radius:6px;
+    box-shadow:inset 0 0 10px rgba(0,0,0,.3);
+  }
+  #bed .pillow{
+    position:absolute; top:6%; left:6%; width:30%; height:18%;
+    background:linear-gradient(#fff,#ece0c8);
+    border-radius:50%;
+    box-shadow:0 4px 8px var(--shadow);
+  }
+  #bed .headboard{
+    position:absolute; top:-6%; left:0; right:0; height:24%;
+    background:linear-gradient(#3a1408,#2a0a04);
+    border-radius:8px 8px 0 0;
+  }
+
+  /* Drawer / cabinet */
+  #cabinet{
+    bottom:6%; left:6%; width:18%; height:42%;
+  }
+  #cabinet .body{
+    position:absolute; inset:0;
+    background:linear-gradient(#6a3a18,#3a1c0a);
+    border:3px solid #2a1004; border-radius:4px;
+    box-shadow:0 8px 18px var(--shadow);
+  }
+  .drawer{
+    position:absolute; left:12%; right:12%; height:30%;
+    background:linear-gradient(#7a4420,#5a2c10);
+    border:1px solid #2a1004; border-radius:2px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.4);
+  }
+  #dTop{ top:12%; }
+  #dMid{ top:46%; }
+  .drawer .knob{
+    position:absolute; left:50%; bottom:10%; transform:translateX(-50%);
+    width:18%; height:30%;
+    background:radial-gradient(circle at 35% 35%, #ffe89a, #b8902a 60%, #6a4a10);
+    border-radius:50%;
+  }
+
+  /* Window / curtain area */
+  #window{
+    top:8%; left:4%; width:22%; height:46%;
+  }
+  #window .glass{
+    position:absolute; top:6%; left:8%; right:8%; bottom:8%;
+    background:linear-gradient(135deg, #0a1a3a, #1a3a6a 40%, #3a6aa0 100%);
+    border:6px solid #2a1408;
+    box-shadow:inset 0 0 30px rgba(0,0,0,.6);
+  }
+  #window .bar{ position:absolute; background:#2a1408; }
+  #window .bar.v{ top:6%; bottom:8%; width:5px; left:48%; }
+  #window .bar.h{ left:8%; right:8%; height:5px; top:48%; }
+  #curtain{
+    position:absolute; top:0; right:-4%; width:22%; height:60%;
+    background:
+      repeating-linear-gradient(90deg, #b2202a 0 14px, #7a0f14 14px 28px);
+    border-radius:0 0 0 100% / 0 0 0 30%;
+    box-shadow: -4px 0 10px rgba(0,0,0,.4);
+    transform-origin: top right;
+    transition: transform .6s;
+  }
+  #curtain.open{ transform: translateX(46%); }
+
+  /* Desk lamp hint area */
+  #lamp{
+    top:34%; left:68%; width:10%; height:14%;
+  }
+  #lamp .pole{ position:absolute; left:46%; top:30%; width:8%; height:70%; background:#888; }
+  #lamp .head{
+    position:absolute; top:0; left:14%; width:72%; height:34%;
+    background:linear-gradient(#cccccc,#777); border-radius:50% 50% 20% 20%;
+    transform:rotate(-12deg);
+    box-shadow:0 4px 8px var(--shadow);
+  }
+  #lamp .base{ position:absolute; bottom:0; left:30%; width:40%; height:14%; background:#666; border-radius:50%; }
+
+  /* Door (escape). Subtle, on right side. */
+  #door{
+    top:10%; right:4%; width:18%; height:54%;
+  }
+  #door .panel{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(90deg, #3a0a0e 0%, #5e1018 6%, #7a0f14 50%, #5e1018 94%, #3a0a0e 100%);
+    border:6px solid #2a0406;
+    border-radius:40% 40% 4px 4px / 12% 12% 4px 4px;
+    box-shadow:inset 0 0 30px rgba(0,0,0,.7), 0 8px 22px var(--shadow);
+  }
+  #door .knob{
+    position:absolute; top:48%; left:14%; width:14%; height:18%;
+    background:radial-gradient(circle at 35% 35%, #ffe89a, #b8902a 60%, #6a4a10);
+    border-radius:40%;
+    box-shadow:0 0 6px #000;
+  }
+
+  /* ============ generic close-up view styling ============ */
+  .closeup{
+    background:
+      radial-gradient(ellipse at center, #1a0a0a 0%, #000 90%);
+    align-items:center; justify-content:center;
+  }
+  .closeup .pad{
+    position:relative;
+    width:min(70%,620px);
+    background:#0c0606;
+    border:2px solid #333;
+    border-radius:8px;
+    box-shadow:0 0 40px rgba(0,0,0,.8);
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* Safe close-up */
+  #view-safe .pad{ height:min(80%,460px); }
+  #safeBox{
+    position:relative; width:78%; height:74%;
+    background:linear-gradient(#9aa,#445);
+    border:8px solid #222; border-radius:10px;
+    box-shadow:inset 0 0 24px rgba(0,0,0,.6);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  }
+  #safeDial{
+    width:200px; height:200px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 50%, #2a2a2a 0 60%, #111 61% 100%);
+    border:6px solid #ccc;
+    box-shadow:inset 0 0 30px #000, 0 6px 16px rgba(0,0,0,.6);
+    position:relative;
+    transition: transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  #safeDial .tick{
+    position:absolute; left:50%; top:6%; width:2px; height:10px;
+    background:#999; transform-origin: 50% 94px;
+  }
+  #safeDial .num{
+    position:absolute; left:50%; top:16%; font-size:13px; color:#eee;
+    transform-origin: 0 78px;
+  }
+  #safeDial .marker{
+    position:absolute; top:-2px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent;
+    border-top:12px solid var(--gold);
+    filter:drop-shadow(0 0 4px rgba(231,194,90,.8));
+  }
+  #safeKeypad{ display:flex; gap:8px; align-items:center; }
+  #safeKeypad button{
+    width:36px; height:36px; border-radius:6px;
+    border:1px solid #555; background:linear-gradient(#333,#111);
+    color:#eee; font-size:16px; cursor:pointer;
+  }
+  #safeKeypad button:hover{ background:linear-gradient(#444,#222); }
+  #safeKeypad .enter{
+    width:auto; padding:0 12px; background:linear-gradient(#3a7c3a,#1c3c1c); color:#bfe8bf;
+  }
+  #safeMsg{ font-size:13px; min-height:18px; color:var(--gold); }
+
+  /* Dancer / video close-up */
+  #view-dancer .pad{ height:min(80%,420px); }
+  #telescreen{
+    position:relative; width:84%; height:84%;
+    background:#000;
+    border:10px solid #2a2a2a;
+    border-radius:8px;
+    box-shadow:inset 0 0 30px #000, 0 0 30px rgba(0,200,255,.15);
+    overflow:hidden;
+  }
+  #telescreen .statics{
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 4px),
+      radial-gradient(circle at 50% 50%, #10243a, #000);
+    opacity:.9;
+  }
+  #dancer{
+    position:absolute; left:50%; bottom:14%;
+    transform:translateX(-50%);
+    width:90px; height:150px;
+    visibility:hidden;
+  }
+  #dancer .head{ position:absolute; left:36px; top:0; width:22px; height:22px; background:#ffd9a0; border-radius:50%; }
+  #dancer .body{ position:absolute; left:30px; top:22px; width:34px; height:46px; background:#4a90e2; border-radius:8px; }
+  #dancer .armL,#dancer .armR{ position:absolute; top:26px; width:8px; height:40px; background:#4a90e2; border-radius:4px; transform-origin: top center; }
+  #dancer .armL{ left:22px; }
+  #dancer .armR{ left:64px; }
+  #dancer .legL,#dancer .legR{ position:absolute; top:66px; width:10px; height:46px; background:#222; border-radius:4px; transform-origin: top center; }
+  #dancer .legL{ left:36px; }
+  #dancer .legR{ left:54px; }
+  #tapeLabel{ position:absolute; top:8px; left:8px; font-size:11px; color:#7CFC55; font-family:monospace; }
+
+  /* ---------- Inventory bar ---------- */
+  #invBar{
+    display:flex; align-items:center; gap:8px;
+    padding:8px 12px;
+    background:linear-gradient(#160708,#0a0404);
+    border-top:2px solid var(--gold-deep);
+    box-shadow:0 -4px 16px var(--shadow);
+    z-index:30;
+    min-height:64px;
+  }
+  #invBar .label{ font-size:11px; opacity:.6; margin-right:4px; letter-spacing:1px; }
+  .slot{
+    width:48px; height:48px; border-radius:6px;
+    background:#1a0a0a; border:1px solid #444;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; cursor:pointer; position:relative;
+    transition:transform .1s, border-color .1s, box-shadow .1s;
+  }
+  .slot.has:hover{ transform:translateY(-2px); border-color:var(--gold); box-shadow:0 0 10px rgba(231,194,90,.5); }
+  .slot.selected{ border-color:var(--gold); box-shadow:0 0 12px rgba(231,194,90,.8); }
+  .slot .count{ position:absolute; right:2px; bottom:0; font-size:10px; color:var(--gold); background:rgba(0,0,0,.6); padding:0 3px; border-radius:3px; }
+
+  /* ---------- Message overlay ---------- */
+  #msgLayer{
+    position:absolute; left:0; right:0; bottom:78px;
+    padding:10px 16px; text-align:center;
+    pointer-events:none; z-index:25;
+  }
+  #msg{
+    display:inline-block; max-width:80%;
+    background:rgba(8,4,4,.86);
+    border:1px solid var(--gold-deep);
+    color:var(--paper);
+    padding:8px 14px; border-radius:6px;
+    font-size:13px; opacity:0; transform:translateY(8px);
+    transition:opacity .25s, transform .25s;
+    box-shadow:0 6px 18px var(--shadow);
+  }
+  #msg.show{ opacity:1; transform:none; }
+
+  /* ---------- Win overlay ---------- */
+  #win{
+    position:absolute; inset:0; z-index:50;
+    background:radial-gradient(circle at 50% 40%, rgba(20,4,4,.6), rgba(0,0,0,.95));
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    text-align:center; gap:14px; color:var(--gold);
+  }
+  #win.show{ display:flex; animation: fadeIn 1s ease; }
+  #win h1{ font-size:38px; letter-spacing:4px; text-shadow:0 0 16px rgba(231,194,90,.7); margin:0; }
+  #win p{ max-width:560px; color:var(--paper); opacity:.9; line-height:1.6; font-size:14px; }
+  #win button{
+    margin-top:8px; padding:10px 22px; cursor:pointer;
+    background:linear-gradient(var(--crimson-light),var(--crimson));
+    color:var(--gold); border:1px solid var(--gold-deep); border-radius:6px;
+    font-size:14px; letter-spacing:1px;
+  }
+  #win button:hover{ filter:brightness(1.1); }
+  @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+
+  /* ---------- Intro overlay ---------- */
+  #intro{
+    position:absolute; inset:0; z-index:60;
+    background:#000;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    text-align:center; gap:16px; color:var(--paper);
+  }
+  #intro .splash{
+    font-size:42px; letter-spacing:6px; color:var(--crimson-light);
+    text-shadow:0 0 24px rgba(178,32,42,.7);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  #intro .sub{ max-width:520px; opacity:.8; line-height:1.7; font-size:14px; }
+  #intro button{
+    margin-top:6px; padding:12px 28px; cursor:pointer;
+    background:linear-gradient(var(--crimson-light),var(--crimson));
+    color:var(--gold); border:1px solid var(--gold-deep); border-radius:6px;
+    font-size:15px; letter-spacing:2px;
+  }
+  #intro button:hover{ filter:brightness(1.12); }
+  @keyframes pulse{ 0%,100%{opacity:.85} 50%{opacity:1} }
+  .credit{ font-size:11px; opacity:.45; margin-top:24px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ Top bar ============ -->
+  <div id="topbar">
+    <span class="title">深紅房間</span>
+    <span class="sub">CRIMSON ROOM · 祖師爺致敬版</span>
+    <div id="btnNav">
+      <button class="navBtn active" data-view="room">房間</button>
+      <button class="navBtn" data-view="safe" id="navSafe">保險箱</button>
+      <button class="navBtn" data-help="1">說明</button>
+    </div>
+  </div>
+
+  <!-- ============ Stage ============ -->
+  <div id="stage">
+    <div id="scene">
+
+      <!-- ============ ROOM VIEW ============ -->
+      <div id="view-room" class="view active">
+        <div id="painting" class="hot" data-act="painting"><div class="face"></div></div>
+
+        <!-- shelf + cd player -->
+        <div id="shelf"></div>
+        <div id="cdplayer" class="hot" data-act="cdplayer" title="CD 機"></div>
+
+        <!-- window + curtain -->
+        <div id="window">
+          <div class="glass"></div>
+          <div class="bar v"></div>
+          <div class="bar h"></div>
+        </div>
+        <div id="curtain" class="hot" data-act="curtain"></div>
+
+        <!-- cabinet with drawers -->
+        <div id="cabinet">
+          <div class="body"></div>
+          <div id="dTop" class="drawer hot" data-act="drawerTop"><div class="knob"></div></div>
+          <div id="dMid" class="drawer hot" data-act="drawerMid"><div class="knob"></div></div>
+        </div>
+
+        <!-- bed -->
+        <div id="bed">
+          <div class="headboard"></div>
+          <div class="frame"></div>
+          <div class="pillow hot" data-act="pillow"></div>
+          <div class="mattress hot" data-act="mattress"></div>
+        </div>
+
+        <!-- desk lamp -->
+        <div id="lamp" class="hot" data-act="lamp">
+          <div class="head"></div>
+          <div class="pole"></div>
+          <div class="base"></div>
+        </div>
+
+        <!-- door -->
+        <div id="door" class="hot" data-act="door">
+          <div class="panel"></div>
+          <div class="knob"></div>
+        </div>
+      </div>
+
+      <!-- ============ SAFE VIEW ============ -->
+      <div id="view-safe" class="view closeup">
+        <div class="pad">
+          <div id="safeBox">
+            <div id="safeDial"></div>
+            <div id="safeKeypad"></div>
+            <div id="safeMsg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ DANCER / VIDEO VIEW ============ -->
+      <div id="view-dancer" class="view closeup">
+        <div class="pad">
+          <div id="telescreen">
+            <div class="statics"></div>
+            <div id="tapeLabel"></div>
+            <div id="dancer">
+              <div class="head"></div>
+              <div class="body"></div>
+              <div class="armL"></div>
+              <div class="armR"></div>
+              <div class="legL"></div>
+              <div class="legR"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ Inventory ============ -->
+  <div id="invBar">
+    <span class="label">物品：</span>
+    <div id="slots" style="display:flex;gap:8px;"></div>
+  </div>
+
+  <!-- message layer -->
+  <div id="msgLayer"><div id="msg"></div></div>
+
+  <!-- intro overlay -->
+  <div id="intro">
+    <div class="splash">深紅房間</div>
+    <div class="sub">
+      你在陌生的深紅色房間醒來，大門被鎖住。四處觀察、收集物品、組合線索，
+      找出逃出去的方法。<br><br>
+      <b>玩法：</b>點擊房間內任何可疑的地方 (油畫、抽屜、枕頭、窗簾、CD 機……)；
+      物品會收入下方物品欄，可互相組合使用。
+    </div>
+    <button id="startBtn">開始</button>
+    <div class="credit">致敬 Toshimitsu Takagi「深紅の部屋」(2004) · 此為隔離重製，與其他檔案無關</div>
+  </div>
+
+  <!-- win overlay -->
+  <div id="win">
+    <h1>逃出成功！</h1>
+    <p>你擰開了門鎖，推開大門，迎面是晨光。<br>恭喜你完成「深紅房間」——密室逃脫嘅祖師爺。</p>
+    <button id="againBtn">重新挑戰</button>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   Crimson Room — isolated single-file game logic
+   ============================================================ */
+
+// ---------- tiny DOM helpers ----------
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const el = (t, p={}, r=document.body) => {
+  const e = document.createElement(t);
+  for (const k in p) if (k==="class") e.className=p[k]; else if(k==="text") e.textContent=p[k]; else e.setAttribute(k, p[k]);
+  if (r) r.appendChild(e); return e;
+};
+
+// ---------- message toast ----------
+let msgTimer=null;
+function msg(text, ms=2200){
+  const m = $("#msg");
+  m.textContent = text;
+  m.classList.add("show");
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(()=> m.classList.remove("show"), ms);
+}
+
+// ---------- game state ----------
+const STATE = {
+  inv: {},            // itemId -> count
+  selected: null,     // currently selected inventory item id
+  flags: {
+    curtainOpen:false, drawerTopOpen:false, drawerMidOpen:false,
+    pillowMoved:false, paintingRemoved:false, ringOnHanger:false,
+    cdInPlayer:false, tapeInPlayer:false, powerInPlayer:false, batteryInPlayer:false,
+    safeFound:false, safeOpen:false, dancerWatched:false,
+    escaped:false, memoRead:false, pics:0
+  },
+  currentView:"room",
+  safeCode:"1994",     // year of "the photograph" -> 4-digit code
+  safeInput:[0,0,0,0],
+  player:{ name:"" }
+};
+
+// ---------- item definitions ----------
+const ITEMS = {
+  ring:    { icon:"💍", name:"金色戒指" },
+  cdcase:  { icon:"💿", name:"CD 盒" },
+  power:   { icon:"🔌", name:"電源線" },
+  tape:    { icon:"📼", name:"錄音帶" },
+  key:     { icon:"🪀", name:"小鑰匙" },
+  battery: { icon:"🔋", name:"電池" },
+  memo:    { icon:"📝", name:"便條" },
+  lighter: { icon:"🔥", name:"打火機" },
+  beer:    { icon:"🍺", name:"啤酒罐" },
+  screw:  { icon:"🪛", name:"螺絲批" },
+};
+
+function addItem(id, n=1){
+  STATE.inv[id] = (STATE.inv[id]||0) + n;
+  renderInv();
+  msg(`得到：${ITEMS[id].name}`);
+}
+function removeItem(id){
+  delete STATE.inv[id]; renderInv();
+}
+function has(id){ return !!STATE.inv[id]; }
+
+// ---------- inventory render ----------
+function renderInv(){
+  const wrap = $("#slots");
+  wrap.innerHTML = "";
+  const owned = Object.keys(STATE.inv).filter(id=> STATE.inv[id]>0);
+  if (owned.length===0){
+    const hint = el("span",{class:"label",text:"(空空如也 —— 四圍 click 搵吓啦)"}, wrap);
+    hint.style.opacity=".5";
+    return;
+  }
+  owned.forEach(id=>{
+    const count = STATE.inv[id];
+    const slot = el("div", {class:"slot has"+(STATE.selected===id?" selected":""), title: ITEMS[id].name}, wrap);
+    el("span", {text: ITEMS[id].icon}, slot);
+    if (count>1) el("span",{class:"count",text:String(count)}, slot);
+    slot.dataset.id = id;
+    slot.onclick = ()=> selectItem(id);
+  });
+}
+
+function selectItem(id){
+  STATE.selected = (STATE.selected===id)? null : id;
+  renderInv();
+  if (STATE.selected){
+    msg(`已選取：${ITEMS[id].name}　(再點一下取消)`);
+  }
+}
+
+// ---------- view switching ----------
+function setView(name){
+  STATE.currentView = name;
+  $$(".view").forEach(v=> v.classList.toggle("active", v.id==="view-"+name));
+  $$("#btnNav .navBtn").forEach(b=>{
+    if (b.dataset.view) b.classList.toggle("active", b.dataset.view===name);
+  });
+  $("#navSafe").style.display = STATE.flags.safeFound ? "" : "none";
+}
+$$("#btnNav .navBtn").forEach(b=>{
+  b.onclick = ()=>{
+    if (b.dataset.view){
+      if (b.dataset.view==="safe" && !STATE.flags.safeFound){ msg("你還未發現保險箱。"); return; }
+      setView(b.dataset.view);
+    } else if (b.dataset.help){
+      msg("四圍 CLICK 房間嘅嘢：油畫、抽屜、枕頭、窗簾、CD 機、檯燈、大門……組合物品去解謎。",4200);
+    }
+  };
+});
+
+// clicking the telescreen backdrop returns to room (and safe)
+$("#view-safe").addEventListener("click",(e)=>{
+  if (e.target.classList.contains("closeup") || e.target.classList.contains("pad")) setView("room");
+});
+$("#view-dancer").addEventListener("click",(e)=>{
+  if (e.target.classList.contains("closeup") || e.target.classList.contains("pad")) setView("room");
+});
+
+// ---------- hotspot dispatcher ----------
+function bindHotspots(){
+  $$(".hot").forEach(h=>{
+    h.onclick = (ev)=>{
+      ev.stopPropagation();
+      const act = h.dataset.act;
+      if (ACTIONS[act]) ACTIONS[act]();
+    };
+  });
+}
+
+// ---------- ACTIONS (interactions) ----------
+const ACTIONS = {
+
+  painting(){
+    if (!STATE.flags.paintingRemoved){
+      STATE.flags.paintingRemoved = true;
+      const p = $("#painting");
+      p.style.transition="transform .5s, opacity .5s";
+      p.style.transform="translateY(-30%) rotate(-4deg)";
+      p.style.opacity="0.2";
+      msg("你把油畫揭起……後面的牆上藏著一張便條！");
+      addItem("memo");
+      STATE.flags.memoRead = true;
+    } else {
+      // maybe hide something else behind later
+      msg("牆上油畫已經被你拿開了。");
+    }
+  },
+
+  curtain(){
+    const c = $("#curtain");
+    if (!STATE.flags.curtainOpen){
+      STATE.flags.curtainOpen = true;
+      c.classList.add("open");
+      msg("窗簾拉開，一個閃亮的東西掉到地上。");
+      // a second ring falls when reopened fully
+      setTimeout(()=> addItem("ring"), 500);
+    } else {
+      // searching curtain folds
+      if (!has("ring") && STATE.flags.curtainOpen && !STATE.flags.curtainSearched){
+        STATE.flags.curtainSearched = true;
+        msg("你在窗簾褶縫裡摸索……");
+        setTimeout(()=> addItem("ring"), 400);
+      } else {
+        msg("窗簾下面空空如也。");
+      }
+    }
+  },
+
+  cdplayer(){
+    const sel = STATE.selected;
+    if (sel==="power" && !STATE.flags.powerInPlayer){
+      STATE.flags.powerInPlayer = true;
+      removeItem("power");
+      msg("你把電源線插到 CD 機上 —— 兩邊接通了！");
+      return;
+    }
+    if (sel==="cdcase" && !STATE.flags.cdInPlayer){
+      STATE.flags.cdInPlayer = true;
+      msg("CD 盒只是個空盒……沒有光碟。");
+      return;
+    }
+    if (sel==="tape" && !STATE.flags.tapeInPlayer){
+      STATE.flags.tapeInPlayer = true;
+      removeItem("tape");
+      STATE.flags.tapeReady = true;
+      msg("你把錄音帶塞進機器裡。");
+      return;
+    }
+    if (sel==="battery" && !STATE.flags.batteryInPlayer){
+      STATE.flags.batteryInPlayer = true;
+      removeItem("battery");
+      msg("電池裝進了機器背後的電池槽。");
+      return;
+    }
+    // try to operate
+    if (STATE.flags.powerInPlayer && STATE.flags.tapeInPlayer && STATE.flags.batteryInPlayer){
+      msg("按下播放鍵……機器亮起，接駁到電視螢幕。");
+      setView("dancer");
+      startDancer();
+    } else {
+      let need=[];
+      if (!STATE.flags.powerInPlayer) need.push("電源線");
+      if (!STATE.flags.tapeInPlayer)  need.push("錄影帶");
+      if (!STATE.flags.batteryInPlayer) need.push("電池");
+      msg("機器缺少動力元件：" + need.join("、") + "　(在物品欄選取後再點 CD 機)");
+    }
+  },
+
+  drawerTop(){
+    // first drawer always opens -> small key
+    if (!STATE.flags.drawerTopOpen){
+      STATE.flags.drawerTopOpen = true;
+      const d = $("#dTop");
+      d.style.transition="transform .35s";
+      d.style.transform="translateY(120%)";
+      msg("抽屜拉開。");
+      setTimeout(()=>{
+        if (!has("key")) addItem("key");
+        if (!has("cdcase")) addItem("cdcase");
+      }, 360);
+    } else {
+      msg("上面抽屜已經空了。");
+    }
+  },
+
+  drawerMid(){
+    const sel = STATE.selected;
+    if (!STATE.flags.drawerMidOpen){
+      // middle drawer is locked; needs small key
+      if (sel==="key"){
+        STATE.flags.drawerMidOpen = true;
+        removeItem("key");              // key stays in the lock
+        const d = $("#dMid");
+        d.style.transition="transform .35s";
+        d.style.transform="translateY(120%)";
+        msg("小鑰匙擰動 —— 鎖著的抽屜彈開！");
+        setTimeout(()=> addItem("power"), 360);
+      } else {
+        msg("這抽屜是鎖上的。需要一把小鑰匙。");
+      }
+    } else {
+      msg("抽屜空空的。");
+    }
+  },
+
+  pillow(){
+    const sel = STATE.selected;
+    if (!STATE.flags.pillowMoved){
+      STATE.flags.pillowMoved = true;
+      const p = $(".pillow");
+      p.style.transition="transform .4s";
+      p.style.transform="translateX(60%) rotate(8deg)";
+      msg("枕頭移開。床墊縫裡藏著一枚戒指。");
+      setTimeout(()=> addItem("ring"), 350);
+    } else {
+      // first time second look: battery
+      if (!has("battery") && !STATE.flags.underBedDone){
+        STATE.flags.underBedDone = true;
+        msg("你伸手到床底下摸索……摸到一顆電池。");
+        setTimeout(()=> addItem("battery"), 350);
+      } else {
+        msg("床下再沒有東西了。");
+      }
+    }
+  },
+
+  mattress(){
+    if (!has("tape") && !STATE.flags.mattressDone){
+      STATE.flags.mattressDone = true;
+      msg("翻開床墊，背後黏著一盒錄影帶。");
+      setTimeout(()=> addItem("tape"), 300);
+    } else {
+      msg("床墊再沒有異樣。");
+    }
+  },
+
+  lamp(){
+    if (!has("lighter") && !STATE.flags.lampDone){
+      STATE.flags.lampDone = true;
+      msg("檯燈底座下面壓著一個打火機。");
+      setTimeout(()=> addItem("lighter"), 300);
+    } else {
+      msg("檯燈沒什麼特別。");
+    }
+  },
+
+  door(){
+    if (STATE.flags.escaped) return;
+    const sel = STATE.selected;
+    if (sel==="screw"){
+      STATE.flags.escaped = true;
+      removeItem("screw");
+      msg("你用螺絲批撬開門把內的鎖芯……「啪」一聲，門開了！");
+      setTimeout(()=> $("#win").classList.add("show"), 900);
+      return;
+    }
+    if (STATE.flags.safeOpen){
+      msg("門鎖的螺絲已被擰鬆……但仍需要工具（螺絲批）。");
+      return;
+    }
+    msg("門被鎖死了。需要找到開鎖的東西。");
+  }
+};
+
+// ---------- DANCER puzzle ----------
+// The classic: video shows a dancer; the on-screen digits cycle and
+// combine the seq with watching the dance to derive a wall location.
+// In this tribute: the dancer "dances" to four poses pointing to a
+// 4-digit code shown briefly. After the clip, the safe is revealed on the back wall.
+let dancerTimer=null, dancerStep=0;
+function startDancer(){
+  $("#tapeLabel").textContent = "▶ PLAY  ·  REC";
+  $("#dancer").style.visibility = "visible";
+  const arms=[".armL",".armR"], legs=[".legL",".legR"];
+  // a sequence of poses; the numbers 1 9 9 4 flash with the beat
+  const seq = [ "1","9","9","4" ];
+  let beat = 0;
+  dancerStep = 0;
+  clearInterval(dancerTimer);
+  msg("電視亮起 —— 一個人在跳舞……並閃出一串數字！", 3000);
+
+  dancerTimer = setInterval(()=>{
+    const d = $("#dancer");
+    const pose = dancerStep % 4;
+    // animate limbs
+    d.querySelector(".armL").style.transform = `rotate(${[-30,40,-50,20][pose]}deg)`;
+    d.querySelector(".armR").style.transform = `rotate(${[40,-30,50,-20][pose]}deg)`;
+    d.querySelector(".legL").style.transform = `rotate(${[15,-15,10,-10][pose]}deg)`;
+    d.querySelector(".legR").style.transform = `rotate(${[-15,15,-10,10][pose]}deg)`;
+    // flash a digit
+    const lbl = $("#tapeLabel");
+    lbl.textContent = `▶ PLAY   ${seq[beat%4]}`;
+    beat++;
+    dancerStep++;
+    if (dancerStep>16){
+      clearInterval(dancerTimer);
+      $("#tapeLabel").textContent = "■ STOP";
+      STATE.flags.dancerWatched = true;
+      // reveal the safe on back wall (replace painting location concept)
+      revealSafe();
+      msg("畫面熄滅。地板…不，是後牆傳來「卡」的一聲，牆板鬆了一塊！", 4000);
+      setTimeout(()=> setView("room"), 1200);
+    }
+  }, 520);
+}
+
+function revealSafe(){
+  if (STATE.flags.safeFound) return;
+  STATE.flags.safeFound = true;
+  // add the safe hotspot onto the back wall, near painting area
+  const room = $("#view-room");
+  const safespot = el("div", {class:"hot", id:"wallSafe"}, room);
+  safespot.style.cssText = "top:34%; left:46%; width:12%; height:22%;";
+  // visual brick patch
+  const patch = el("div",{}, safespot);
+  patch.style.cssText =
+    "position:absolute;inset:0;background:linear-gradient(#3a3a40,#202028);"+
+    "border:2px solid #111;border-radius:4px;box-shadow:inset 0 0 12px #000,0 4px 10px rgba(0,0,0,.6);";
+  const handle = el("div",{}, safespot);
+  handle.style.cssText = "position:absolute;top:46%;left:42%;width:16%;height:14%;"+
+    "background:radial-gradient(circle at 35% 35%,#ddd,#666);border-radius:40%;";
+  safespot.onclick = ()=> setView("safe");
+  $("#navSafe").style.display = "";
+}
+
+// ---------- SAFE interaction ----------
+// Build the safe dial ticks once
+(function buildSafeDial(){
+  const dial = $("#safeDial");
+  for (let i=0;i<12;i++){
+    const a = i*30;
+    const t = el("div",{class:"tick"}, dial);
+    t.style.transform = `translateX(-50%) rotate(${a}deg)`;
+    const n = el("div",{class:"num", text:String(i)}, dial);
+    const rad = (a-90)*Math.PI/180;
+    n.style.transform = `translate(${Math.cos(rad)*64}px, ${Math.sin(rad)*64}px)`;
+  }
+  el("div",{class:"marker"}, dial);
+})();
+
+// Build keypad: 4 digits with up/down, a display, and an enter button
+function setSafeDisplay(){
+  const d = $("#safeInput");
+  if (d) d.textContent = STATE.safeInput.join("");
+}
+function bumpDigit(idx, dir){
+  if (STATE.flags.safeOpen) return;
+  STATE.safeInput[idx] = (STATE.safeInput[idx]+dir+10)%10;
+  setSafeDisplay();
+  // spin dial for flavor using total of digits
+  const total = STATE.safeInput.reduce((a,d,i)=> a + d*Math.pow(10,3-i), 0);
+  $("#safeDial").style.transform = `rotate(${ (total % 360) }deg)`;
+}
+function trySafe(){
+  const guess = STATE.safeInput.join("");
+  if (STATE.flags.safeOpen){ msg("保險箱已經打開。"); return; }
+  if (guess===STATE.safeCode){
+    STATE.flags.safeOpen = true;
+    msg("「喀噠」——保險箱打開了！裡面有一支螺絲批。");
+    $("#safeMsg").textContent = "✓ 解鎖";
+    $("#safeMsg").style.color = "#7CFC55";
+    setTimeout(()=> addItem("screw"), 700);
+  } else {
+    msg("密碼錯誤。再想想……影片裡那串數字。");
+    $("#safeMsg").textContent = "✗ 密碼錯誤";
+    $("#safeMsg").style.color = "#ff6b6b";
+  }
+}
+(function buildKeypad(){
+  const wrap = $("#safeKeypad");
+  // Display row
+  const disp = el("div",{id:"safeInput"}, wrap);
+  disp.style.cssText = "font-family:monospace;letter-spacing:6px;font-size:26px;color:var(--gold);text-align:center;";
+  disp.textContent = "0000";
+  // Digit columns with ▲ / ▼
+  const digitsWrap = el("div",{style:"display:flex;gap:14px;align-items:center;"}, wrap);
+  for (let i=0;i<4;i++){
+    const col = el("div",{style:"display:flex;flex-direction:column;align-items:center;gap:3px;"}, digitsWrap);
+    const up = el("button",{text:"▲"}, col); up.style.cssText="width:30px;height:22px;font-size:10px;";
+    const dn = el("button",{text:"▼"}, col); dn.style.cssText="width:30px;height:22px;font-size:10px;";
+    up.onclick = ()=> bumpDigit(i,+1);
+    dn.onclick = ()=> bumpDigit(i,-1);
+  }
+  // Enter
+  const enter = el("button",{class:"enter",text:"確認開鎖"}, wrap);
+  enter.onclick = trySafe;
+})();
+
+// Keyboard support when in safe view
+document.addEventListener("keydown",(e)=>{
+  if (STATE.currentView!=="safe" || STATE.flags.safeOpen) return;
+  if (e.key==="Enter"){ trySafe(); }
+  if (/^[0-9]$/.test(e.key)){
+    STATE.safeInput = STATE.safeInput.slice(1).concat(Number(e.key));
+    STATE.safeInput.length = 4; // safety
+    setSafeDisplay();
+    const total = STATE.safeInput.reduce((a,d,i)=> a + d*Math.pow(10,3-i), 0);
+    $("#safeDial").style.transform = `rotate(${ (total % 360) }deg)`;
+  }
+}, {passive:true});
+
+// ---------- init ----------
+bindHotspots();
+renderInv();
+
+$("#startBtn").onclick = ()=>{
+  $("#intro").style.display="none";
+};
+$("#againBtn").onclick = ()=> location.reload();
+
+// helpful first message
+setTimeout(()=>{ if($("#intro").style.display!=="none"){} }, 0);
+</script>
+</body>
+</html>

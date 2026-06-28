@@ -532,10 +532,11 @@
   <div id="intro">
     <div class="splash">深紅房間</div>
     <div class="sub">
-      你在陌生的深紅色房間醒來，大門被鎖住。四處觀察、收集物品、組合線索，
+      你在陌生的深紅色房間醒來，大門被鎖住。四處觀察、收集物品、解開線索，
       找出逃出去的方法。<br><br>
       <b>玩法：</b>點擊房間內任何可疑的地方 (油畫、抽屜、枕頭、窗簾、CD 機……)；
-      物品會收入下方物品欄，可互相組合使用。
+      物品會收入下方物品欄 —— 先點一下物品「選取」它，
+      再點房間內的物件 (例如抽屜、CD 機、門) 去使用。
     </div>
     <button id="startBtn">開始</button>
     <div class="credit">致敬 Toshimitsu Takagi「深紅の部屋」(2004)</div>
@@ -609,7 +610,16 @@ const ITEMS = {
 function addItem(id, n=1){
   STATE.inv[id] = (STATE.inv[id]||0) + n;
   renderInv();
-  msg(`得到：${ITEMS[id].name}`);
+  // Only flash "得到：X" if nothing descriptive is already showing,
+  // so action narration (e.g. "你伸手到床底…") stays readable.
+  const m = $("#msg");
+  const narrating = m.classList.contains("show") && m.textContent && !m.textContent.startsWith("得到");
+  if (!narrating){
+    msg(`得到：${ITEMS[id].name}`, 3000);
+  } else {
+    // append the picked-up item name to the current narration line
+    m.textContent = m.textContent + "　【得到：" + ITEMS[id].name + "】";
+  }
 }
 function removeItem(id){
   delete STATE.inv[id]; renderInv();
@@ -659,7 +669,7 @@ $$("#btnNav .navBtn").forEach(b=>{
       if (b.dataset.view==="safe" && !STATE.flags.safeFound){ msg("你還未發現保險箱。"); return; }
       setView(b.dataset.view);
     } else if (b.dataset.help){
-      msg("四圍 CLICK 房間嘅嘢：油畫、抽屜、枕頭、窗簾、CD 機、檯燈、大門……組合物品去解謎。",4200);
+      msg("四圍 CLICK 房間嘅嘢：油畫、抽屜、枕頭、窗簾、CD 機、檯燈、大門……有啲物件要先選取物品再點佢先用得著。",5600);
     }
   };
 });
